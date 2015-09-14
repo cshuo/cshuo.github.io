@@ -19,7 +19,7 @@
 浏览服务器上的目录，包括上传、删除、编辑和重命名文件。
 使用FileBrowseField将图像/文档添加到django的models或database中。
 使用TinyMCE选择图像或文档。">
-<meta property="og:updated_time" content="2015-09-14T10:53:05.000Z">
+<meta property="og:updated_time" content="2015-09-14T10:54:39.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="django1.8 服务器目录管理 -- grappelli + filebrowser">
 <meta name="twitter:description" content="FileBrowser是对Django 管理员界面的一个扩展，目的是：
@@ -195,7 +195,7 @@
   
     <div class="article-meta">
       <a href="/2015/09/14/django-filebrowser/" class="article-date">
-  	<time datetime="2015-09-14T10:53:05.000Z" itemprop="datePublished">2015-09-14</time>
+  	<time datetime="2015-09-14T10:54:39.000Z" itemprop="datePublished">2015-09-14</time>
 </a>
     </div>
   
@@ -249,12 +249,8 @@
 <h3 id="FileBrowser安装与配置">FileBrowser安装与配置</h3><ul>
 <li>安装命令   <pre><code><span class="preprocessor"># pip install django-filebrowser</span>
 </code></pre></li>
-<li>相关配置<br>在Django项目setttings.py中INSTALLED_APPS模块添加相关应用(在django.contrib.admin之前添加):    <pre><code>INSTALLED_APPS = <span class="list">(
-<span class="quoted">'grappelli</span>',
-<span class="quoted">'filebrowser</span>',
-<span class="quoted">'django</span>.contrib.admin',
-)</span>
-</code></pre>在url模式匹配中添加filebrowser的url:     <pre><code><span class="keyword">from</span> filebrowser.sites <span class="keyword">import</span> site
+<li>相关配置<br>在Django项目setttings.py中INSTALLED_APPS模块添加相关应用(在django.contrib.admin之前添加):    <figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">INSTALLED_APPS = <span class="list">(</span><br><span class="line"><span class="quoted">'grappelli</span>',</span><br><span class="line"><span class="quoted">'filebrowser</span>',</span><br><span class="line"><span class="quoted">'django</span>.contrib.admin',</span><br><span class="line">)</span></span><br></pre></td></tr></table></figure>
+在url模式匹配中添加filebrowser的url:     <pre><code><span class="keyword">from</span> filebrowser.sites <span class="keyword">import</span> site
 urlpatterns = patterns[
    url(<span class="string">r'^admin/filebrowser/'</span>, include(site.urls)),
    url(<span class="string">r'^grappelli/'</span>, include(<span class="string">'grappelli.urls'</span>)),
