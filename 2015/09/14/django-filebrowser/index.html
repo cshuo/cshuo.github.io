@@ -19,7 +19,7 @@
 浏览服务器上的目录，包括上传、删除、编辑和重命名文件。
 使用FileBrowseField将图像/文档添加到django的models或database中。
 使用TinyMCE选择图像或文档。">
-<meta property="og:updated_time" content="2015-09-14T03:35:12.000Z">
+<meta property="og:updated_time" content="2015-09-14T10:53:05.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="django1.8 服务器目录管理 -- grappelli + filebrowser">
 <meta name="twitter:description" content="FileBrowser是对Django 管理员界面的一个扩展，目的是：
@@ -195,7 +195,7 @@
   
     <div class="article-meta">
       <a href="/2015/09/14/django-filebrowser/" class="article-date">
-  	<time datetime="2015-09-14T03:35:12.000Z" itemprop="datePublished">2015-09-14</time>
+  	<time datetime="2015-09-14T10:53:05.000Z" itemprop="datePublished">2015-09-14</time>
 </a>
     </div>
   
@@ -235,9 +235,8 @@
 <li>使用TinyMCE选择图像或文档。<a id="more"></a>
 </li>
 </ul>
-<p>安装要求：</p>
-<ul>
-<li>Django1.8(<a href="http://www.djangoproject.com" target="_blank" rel="external">http://www.djangoproject.com</a>)</li>
+<h3 id="安装要求：">安装要求：</h3><ul>
+<li><a href="http://www.djangoproject.com" target="_blank" rel="external">Django1.8</a></li>
 <li>Grappelli<blockquote>
 <p>pip install django-grappelli</p>
 </blockquote>
@@ -247,7 +246,25 @@
 </blockquote>
 </li>
 </ul>
-<!--more-->
+<h3 id="FileBrowser安装与配置">FileBrowser安装与配置</h3><ul>
+<li>安装命令   <pre><code><span class="preprocessor"># pip install django-filebrowser</span>
+</code></pre></li>
+<li>相关配置<br>在Django项目setttings.py中INSTALLED_APPS模块添加相关应用(在django.contrib.admin之前添加):    <pre><code>INSTALLED_APPS = <span class="list">(
+<span class="quoted">'grappelli</span>',
+<span class="quoted">'filebrowser</span>',
+<span class="quoted">'django</span>.contrib.admin',
+)</span>
+</code></pre>在url模式匹配中添加filebrowser的url:     <pre><code><span class="keyword">from</span> filebrowser.sites <span class="keyword">import</span> site
+urlpatterns = patterns[
+   url(<span class="string">r'^admin/filebrowser/'</span>, include(site.urls)),
+   url(<span class="string">r'^grappelli/'</span>, include(<span class="string">'grappelli.urls'</span>)),
+   url(<span class="string">r'^admin/'</span>, include(admin.site.urls)),
+]   
+</code></pre>一般情况下，默认media文件夹下的uploads为上传文件夹，如果需要自定义该目录，则需要添加如下配置项：          <pre><code><span class="setting">FILEBROWSER_DIRECTORY = <span class="value"><span class="string">'yourdirectory/'</span>        </span></span>
+</code></pre></li>
+<li>测试<br>在项目根目录下运行命令：<pre><code><span class="preprocessor"># python manage.py runserver <span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span>:<span class="number">8000</span>           </span>
+</code></pre>访问/admin/filebrowser/browse/，可以管理上传文件（夹）。</li>
+</ul>
 
       
     </div>
