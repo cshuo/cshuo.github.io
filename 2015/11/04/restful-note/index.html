@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Restful API浅析--设计原则与案例修正 | Blog Cshuo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="转载: Restful API浅析 之设计原则与案例修正
+
+之前写Restful的服务器端API，写的不好，痛定思痛，决心好好搞懂Restful。在这一篇中我们首先搞懂Rest的含义，然后以我编写的失败的api为例，讲解如何编写出符合Rest风格的API。注意本篇指导原则一节大部分来自阮一峰老师的RESTful API 设计指南">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Restful API浅析--设计原则与案例修正">
+<meta property="og:url" content="http://cshuo.github.io/2015/11/04/restful-note/index.html">
+<meta property="og:site_name" content="Blog Cshuo">
+<meta property="og:description" content="转载: Restful API浅析 之设计原则与案例修正
+
+之前写Restful的服务器端API，写的不好，痛定思痛，决心好好搞懂Restful。在这一篇中我们首先搞懂Rest的含义，然后以我编写的失败的api为例，讲解如何编写出符合Rest风格的API。注意本篇指导原则一节大部分来自阮一峰老师的RESTful API 设计指南">
+<meta property="og:updated_time" content="2015-11-12T03:30:54.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Restful API浅析--设计原则与案例修正">
+<meta name="twitter:description" content="转载: Restful API浅析 之设计原则与案例修正
+
+之前写Restful的服务器端API，写的不好，痛定思痛，决心好好搞懂Restful。在这一篇中我们首先搞懂Rest的含义，然后以我编写的失败的api为例，讲解如何编写出符合Rest风格的API。注意本篇指导原则一节大部分来自阮一峰老师的RESTful API 设计指南">
+  
+    <link rel="alternative" href="/atom.xml" title="Blog Cshuo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="/img/head.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">cshuo</a></h1>
+		</hgroup>
+
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						<li>友情链接</li>
+						
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="http://moon.nju.edu.cn/people/shuocheng/">关于我</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="facebook" target="_blank" href="https://github.com/cshuo" title="facebook">facebook</a>
+					        
+								<a class="douban" target="_blank" href="http://www.douban.com/people/97347108/" title="douban">douban</a>
+					        
+								<a class="weibo" target="_blank" href="http://weibo.com/2411802345/profile?topnav=1&wvr=6" title="weibo">weibo</a>
+					        
+								<a class="mail" target="_blank" href="http://www.douban.com/people/97347108/" title="mail">mail</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/django/" style="font-size: 10px;">django</a> <a href="/tags/hello/" style="font-size: 10px;">hello</a> <a href="/tags/restful/" style="font-size: 10px;">restful</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://monkey-h.github.io">monkey的博客</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://mengzs.com/">会飞的猪的博客</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://liutianchi.com">毕驰的博客</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://mclspace.com">Mcl&#39;s space</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="https://chuan92.com">chuan92</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://answ.me">answ</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">cshuo</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="/img/head.png" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">cshuo</h1>
+			</hgroup>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="http://moon.nju.edu.cn/people/shuocheng/">关于我</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="facebook" target="_blank" href="https://github.com/cshuo" title="facebook">facebook</a>
+			        
+						<a class="douban" target="_blank" href="http://www.douban.com/people/97347108/" title="douban">douban</a>
+			        
+						<a class="weibo" target="_blank" href="http://weibo.com/2411802345/profile?topnav=1&wvr=6" title="weibo">weibo</a>
+			        
+						<a class="mail" target="_blank" href="http://www.douban.com/people/97347108/" title="mail">mail</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-restful-note" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/11/04/restful-note/" class="article-date">
+  	<time datetime="2015-11-03T16:00:00.000Z" itemprop="datePublished">2015-11-04</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Restful API浅析--设计原则与案例修正
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/restful/">restful</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/web/">web</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong><em>转载: <a href="http://nap-group.herokuapp.com/2015-11/restful-note/" target="_blank" rel="external">Restful API浅析 之设计原则与案例修正</a></em></strong></p>
+<blockquote>
+<p>之前写Restful的服务器端API，写的不好，痛定思痛，决心好好搞懂Restful。<br>在这一篇中我们首先搞懂Rest的含义，然后以我编写的失败的api为例，讲解如何编写出符合Rest风格的API。注意本篇指导原则一节大部分来自阮一峰老师的<a href="http://www.ruanyifeng.com/blog/2014/05/restful_api.html" target="_blank" rel="external">RESTful API 设计指南</a></p>
+</blockquote>
+<a id="more"></a>
+<hr>
+<h2 id="Restful浅析">Restful浅析</h2><p>REST是”REpresentational State Transfer”，一种翻译是”表现层状态转移”,首先看看wiki百科的介绍:</p>
+<blockquote>
+<p>REST - 表征状态转移是Roy Fielding博士在2000年他的博士论文中提出来的一种软件架构风格。 目前在三种主流的Web服务实现方案中，因为REST模式的Web服务与复杂的SOAP和XML-RPC对比来讲明显的更加简洁，越来越多的web服务开始采用REST风格设计和实现。例如，Amazon.com提供接近REST风格的Web服务进行图书查找；雅虎提供的Web服务也是REST风格的。 – wiki</p>
+</blockquote>
+<p>从以上的介绍中我们知道REST是一种web软件架构风格，不过我还是不知道REST是个什么鬼，再查查看，有人这么解释REST:<br><figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">-<span class="ruby"> <span class="constant">REST</span>是一套用来创建<span class="constant">Web</span> <span class="constant">Service</span>的方法。</span><br><span class="line"></span>-<span class="ruby"> <span class="constant">REST</span>式的<span class="constant">Web</span> <span class="constant">Service</span>的主旨是让事情尽量的简单化。</span><br><span class="line"></span>-<span class="ruby"> <span class="constant">REST</span>式的<span class="constant">Web</span> <span class="constant">Service</span>使用<span class="constant">HTTP</span>里的方法：<span class="constant">GET</span>， <span class="constant">POST</span>， <span class="constant">DELETE</span>， <span class="constant">PUT</span>。你不需要使用<span class="constant">URL</span>或请求的内容来指定这个方法。</span><br><span class="line"></span>-<span class="ruby"> <span class="constant">REST</span>式的<span class="constant">Web</span> <span class="constant">Service</span>使用<span class="constant">URL</span>来指明你将要操作什么对象。</span><br><span class="line"></span>-<span class="ruby"> <span class="constant">REST</span>式的<span class="constant">Web</span> <span class="constant">Service</span>使用<span class="constant">HTTP</span>状态码作为返回值。</span><br><span class="line"></span>-<span class="ruby"> <span class="constant">REST</span>式的<span class="constant">Web</span> <span class="constant">Service</span>调用产生的<span class="constant">HTTP</span>请求内容只是用于服务数据——不是用来指明调用方法，目标对象或返回值的。</span></span><br></pre></td></tr></table></figure></p>
+<p>简单来说，REST是所有web应用都应该遵守的架构设计指导原则，每一个URL代表一种资源，客户端通过四个HTTP动词，对服务器端资源进行操作，实现”表现层状态转化”。查看以下几篇文章深入地了解REST：</p>
+<ul>
+<li><a href="http://www.ruanyifeng.com/blog/2011/09/restful.html" target="_blank" rel="external">理解RESTful架构</a> - 阮一峰老师11年的文章,浅显易懂</li>
+<li><a href="http://www.infoq.com/cn/articles/understanding-restful-style" target="_blank" rel="external">理解本真的REST架构风格</a> -infoq上一篇翻译的文章，非常细致地解释了REST</li>
+<li><a href="http://martinfowler.com/articles/richardsonMaturityModel.html" target="_blank" rel="external">Richardson Maturity Model steps toward the glory of REST</a> - Martin fowler解释Richardson的REST3层成熟度模型</li>
+<li><a href="http://hippoom.github.io/blogs/value-of-hypermedia-from-client-perspective.html" target="_blank" rel="external">从消费者的角度评估REST的价值</a> -以举例的方式解释Richardson成熟度模型的第三个级别：Hypermedia，很有意思的一篇文章。</li>
+</ul>
+<p>也许最快的学习方式是学习业界成熟的REST api设计,可以看看github是如何设计<a href="https://developer.github.com/v3/" target="_blank" rel="external">github API</a>的,另外也许你想看看提出REST的<a href="http://www.ics.uci.edu/~fielding/pubs/webarch_icse2000.pdf" target="_blank" rel="external">那篇论文</a>，TL;DR</p>
+<h2 id="设计原则">设计原则</h2><p>本来想写个REST API设计指南的，不过阮一峰老师在14年已经干了<a href="http://www.ruanyifeng.com/blog/2014/05/restful_api.html" target="_blank" rel="external">这事</a>，这里我们转载该文章的原则，然后重新修改我们的api。另外一些好的指南:</p>
+<ul>
+<li><a href="https://bourgeois.me/rest/" target="_blank" rel="external">Some REST best practices</a></li>
+<li><a href="http://codeplanet.io/principles-good-restful-api-design/" target="_blank" rel="external">Principles of good RESTful API Design</a></li>
+</ul>
+<h2 id="指导原则">指导原则</h2><h3 id="域名">域名</h3><p>应该尽量将API部署在专用域名之下,如:<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">https:</span><span class="comment">//api.example.com</span></span><br></pre></td></tr></table></figure></p>
+<p>如果确定API很简单，不会有进一步扩展，可以考虑放在主域名下:<br><figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="label">https:</span>//example<span class="preprocessor">.org</span>/api/</span><br></pre></td></tr></table></figure></p>
+<h3 id="版本">版本</h3><p>应该将API的版本号放入URL。<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">https:</span><span class="comment">//api.example.com/v1/</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="路径">路径</h3><p>在RESTful架构中，每个网址代表一种资源（resource），所以网址中不能有动词，只能有名词，而且所用的名词往往与数据库的表格名对应。一般来说，数据库中的表都是同种记录的”集合”（collection），所以API中的名词也应该使用复数。<br>举例来说，有一个API提供动物园（zoo）的信息，还包括各种动物和雇员的信息，则它的路径应该设计成下面这样。<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">https:</span><span class="comment">//api.example.com/v1/zoos</span></span><br><span class="line"><span class="string">https:</span><span class="comment">//api.example.com/v1/animals</span></span><br><span class="line"><span class="string">https:</span><span class="comment">//api.example.com/v1/employees</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="HTTP动词">HTTP动词</h3><p>对于资源的具体操作类型，由HTTP动词表示。<br>常用的HTTP动词有下面五个（括号里是对应的SQL命令）：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">GET（<span class="operator">SELECT）   ：从服务器取出资源（一项或多项）。</span><br><span class="line">POST（<span class="keyword">CREATE</span>）  ：在服务器新建一个资源。</span><br><span class="line">PUT（<span class="keyword">UPDATE</span>）   ：在服务器更新资源（客户端提供改变后的完整资源）。</span><br><span class="line"><span class="keyword">PATCH</span>（<span class="keyword">UPDATE</span>） ：在服务器更新资源（客户端提供改变的属性）。</span><br><span class="line"><span class="keyword">DELETE</span>（<span class="keyword">DELETE</span>）：从服务器删除资源。</span></span><br></pre></td></tr></table></figure></p>
+<p>一些例子：<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">GET    /zoos   			：列出所有动物园</span><br><span class="line">POST   /zoos   			：新建一个动物园</span><br><span class="line">GET    <span class="regexp">/zoos/</span>ID			：获取某个指定动物园的信息</span><br><span class="line">PUT    <span class="regexp">/zoos/</span>ID			：更新某个指定动物园的信息（提供该动物园的全部信息）</span><br><span class="line">PATCH  <span class="regexp">/zoos/</span>ID			：更新某个指定动物园的信息（提供该动物园的部分信息）</span><br><span class="line">DELETE <span class="regexp">/zoos/</span>ID			：删除某个动物园</span><br><span class="line">GET    <span class="regexp">/zoos/</span>ID/animals		：列出某个指定动物园的所有动物</span><br><span class="line">DELETE <span class="regexp">/zoos/</span>ID<span class="regexp">/animals/</span>ID	：删除某个指定动物园的指定动物</span><br></pre></td></tr></table></figure></p>
+<h3 id="过滤信息（Filtering）">过滤信息（Filtering）</h3><p>如果记录数量很多，服务器不可能都将它们返回给用户。API应该提供参数，过滤返回结果。<br>下面是一些常见的参数:<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">?limit=<span class="number">10</span>		：指定返回记录的数量</span><br><span class="line">?offset=<span class="number">10</span>		：指定返回记录的开始位置。</span><br><span class="line">?page=<span class="number">2</span>&amp;per_page=<span class="number">100</span>	：指定第几页，以及每页的记录数。</span><br><span class="line">?sortby=name&amp;order=asc	：指定返回结果按照哪个属性排序，以及排序顺序。</span><br><span class="line">?animal_type_id=<span class="number">1</span>	：指定筛选条件</span><br></pre></td></tr></table></figure></p>
+<p>参数的设计允许存在冗余，即允许API路径和URL参数偶尔有重复。比如，<code>GET /zoo/ID/animals</code> 与 <code>GET /animals?zoo_id=ID</code> 的含义是相同的。</p>
+<h3 id="状态码（Status_Codes）">状态码（Status Codes）</h3><p>服务器向用户返回的状态码和提示信息，常见的有以下一些（方括号中是该状态码对应的HTTP动词）:<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">200</span> OK - [GET]				：服务器成功返回用户请求的数据，该操作是幂等的（Idempotent）。</span><br><span class="line"><span class="number">201</span> CREATED - [POST/PUT/PATCH]		：用户新建或修改数据成功。</span><br><span class="line"><span class="number">202</span> Accepted - [*]			：表示一个请求已经进入后台排队（异步任务）</span><br><span class="line"><span class="number">204</span> NO CONTENT - [DELETE]		：用户删除数据成功。</span><br><span class="line"><span class="number">400</span> INVALID REQUEST - [POST/PUT/PATCH]	：用户发出的请求有错误，服务器没有进行新建或修改数据的操作，该操作是幂等的。</span><br><span class="line"><span class="number">401</span> Unauthorized - [*]			：表示用户没有权限（令牌、用户名、密码错误）。</span><br><span class="line"><span class="number">403</span> Forbidden - [*] 			：表示用户得到授权（与<span class="number">401</span>错误相对），但是访问是被禁止的。</span><br><span class="line"><span class="number">404</span> NOT FOUND - [*]			：用户发出的请求针对的是不存在的记录，服务器没有进行操作，该操作是幂等的。</span><br><span class="line"><span class="number">406</span> Not Acceptable - [GET]		：用户请求的格式不可得（比如用户请求JSON格式，但是只有XML格式）。</span><br><span class="line"><span class="number">410</span> Gone -[GET]				：用户请求的资源被永久删除，且不会再得到的。</span><br><span class="line"><span class="number">422</span> Unprocesable entity - [POST/PUT/PATCH] ：当创建一个对象时，发生一个验证错误。</span><br><span class="line"><span class="number">500</span> INTERNAL SERVER ERROR - [*]		：服务器发生错误，用户将无法判断发出的请求是否成功。</span><br></pre></td></tr></table></figure></p>
+<h3 id="错误处理（Error_handling）">错误处理（Error handling）</h3><p>如果状态码是<code>4xx</code>，就应该向用户返回出错信息。一般来说，返回的信息中将error作为键名，出错信息作为键值即可。<br><figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attribute">error</span>: <span class="string">"Invalid API key"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="返回结果">返回结果</h3><p>针对不同操作，服务器向用户返回的结果应该符合以下规范。<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">GET    /collection 		：返回资源对象的列表（数组）</span><br><span class="line">GET    <span class="regexp">/collection/</span>resource 	：返回单个资源对象</span><br><span class="line">POST   /collection 		：返回新生成的资源对象</span><br><span class="line">PUT    <span class="regexp">/collection/</span>resource 	：返回完整的资源对象</span><br><span class="line">PATCH  <span class="regexp">/collection/</span>resource 	：返回完整的资源对象</span><br><span class="line">DELETE <span class="regexp">/collection/</span>resource 	：返回一个空文档</span><br></pre></td></tr></table></figure></p>
+<h3 id="Hypermedia_API">Hypermedia API</h3><p>RESTful API最好做到Hypermedia，即返回结果中提供链接，连向其他API方法，使得用户不查文档，也知道下一步应该做什么。<br>比如，当用户向api.example.com的根目录发出请求，会得到这样一个文档。<br><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;"<span class="attribute">link</span>": <span class="value">&#123;</span><br><span class="line">  "<span class="attribute">rel</span>":   <span class="value"><span class="string">"collection https://www.example.com/zoos"</span></span>,</span><br><span class="line">  "<span class="attribute">href</span>":  <span class="value"><span class="string">"https://api.example.com/zoos"</span></span>,</span><br><span class="line">  "<span class="attribute">title</span>": <span class="value"><span class="string">"List of zoos"</span></span>,</span><br><span class="line">  "<span class="attribute">type</span>":  <span class="value"><span class="string">"application/vnd.yourformat+json"</span></span><br><span class="line"></span>&#125;</span>&#125;</span><br></pre></td></tr></table></figure></p>
+<p>上面代码表示，文档中有一个link属性，用户读取这个属性就知道下一步该调用什么API了。rel表示这个API与当前网址的关系（collection关系，并给出该collection的网址），href表示API的路径，title表示API的标题，type表示返回类型。<br>Hypermedia API的设计被称为HATEOAS。Github的API就是这种设计，访问api.github.com会得到一个所有可用API的网址列表。<br><figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"current_user_url"</span>: <span class="string">"https://api.github.com/user"</span>,</span><br><span class="line">  <span class="string">"authorizations_url"</span>: <span class="string">"https://api.github.com/authorizations"</span>,</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>从上面可以看到，如果想获取当前用户的信息，应该去访问api.github.com/user，然后就得到了下面结果。<br><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  "<span class="attribute">message</span>": <span class="value"><span class="string">"Requires authentication"</span></span>,</span><br><span class="line">  "<span class="attribute">documentation_url</span>": <span class="value"><span class="string">"https://developer.github.com/v3"</span></span><br><span class="line"></span>&#125;</span><br></pre></td></tr></table></figure></p>
+<p>上面代码表示，服务器给出了提示信息，以及文档的网址。</p>
+<h3 id="其他">其他</h3><ul>
+<li>API的身份认证应该使用OAuth 2.0框架。</li>
+<li>服务器返回的数据格式，应该尽量使用JSON，避免使用XML。</li>
+</ul>
+<h2 id="案例修正">案例修正</h2><p>下面我们使用上面的准则进行api的整理修改，注意我们目前没有做到Hypermedia</p>
+<h3 id="用户API_:_USERS">用户API : USERS</h3><h4 id="修改前">修改前</h4><ul>
+<li><code>/api/v1/user/:user_id</code>     GET  获取用户信息</li>
+<li><code>/api/v1/auth/register</code>     POST 用户注册</li>
+<li><code>/api/v1/auth/login</code>         POST 用户登录</li>
+<li><code>/api/v1/auth/confirmpw</code>     POST 确认密码</li>
+<li><code>/api/v1/auth/changepw</code>     POST 修改密码</li>
+</ul>
+<h4 id="诊断">诊断</h4><ul>
+<li>资源没有使用复数形式，如<code>user</code></li>
+<li><code>:user_id</code>和<code>users</code>冗余，使用<code>:id</code>即可</li>
+<li>存在动词如<code>register</code>,<code>login</code>等</li>
+<li><code>confirmpw</code>和<code>changepw</code>冗余,应该在改变密码的时候对密码进行确认。</li>
+</ul>
+<h4 id="修改后">修改后</h4><p>由于本项目的用户数据从后台导入，因此删除register功能，另外因为此项目为隐私项目进行授权后所有的请求需要附带token，这里省略access_token参数。<br>这里省略<code>/api/v1</code>的前缀: </p>
+<ul>
+<li><code>/authentication</code> GET 验证用户名密码，并重新生成token，返回基本的用户信息</li>
+<li><code>/users/changePassword</code> POST 重置用户密码，重新生成盐值和hash存储到数据库中，返回修改后的用户基本信息(这个暂时不知道怎么改,是使用users UPDATE方法，或者将改变密码变成一个名词的服务)</li>
+<li><code>/users/details</code> GET 获取用户详细信息，如最近的主题以及最近的回复</li>
+</ul>
+<h3 id="帖子API_:_POSTS">帖子API : POSTS</h3><ul>
+<li><code>/api/v1/recent</code>                     GET    获取最近帖子</li>
+<li><code>/api/v1/posts?limit=xx&amp;page=xx</code>     GET    获取帖子列表</li>
+<li><code>/api/v1/post/:post_id</code>             GET    获取某个帖子内容</li>
+<li><code>/api/v1/post</code>                     POST   新建一个帖子</li>
+<li><code>/api/v1/post/:post_id/likes</code>     POST   为某个帖子点赞</li>
+<li><code>/api/v1/post/:id</code>                 PUT    更新某个帖子</li>
+<li><code>/api/v1/post/:id</code>                 DELETE 删除某个帖子</li>
+</ul>
+<h4 id="诊断-1">诊断</h4><ul>
+<li>资源没有使用复数形式</li>
+<li>post_id冗余</li>
+<li>recent的api和获取帖子列表冗余，设置limit为某值,page为1即可获得最近的帖子</li>
+<li>点赞功能并不在需求里，这里删除掉</li>
+</ul>
+<h4 id="修改后-1">修改后</h4><ul>
+<li><code>/posts?limit=xx&amp;page=xx</code> GET    获取帖子列表</li>
+<li><code>/posts/:id</code>                 GET    获取某个帖子的具体内容</li>
+<li><code>/posts</code>                    POST   创建帖子，返回帖子基本内容。</li>
+<li><code>/posts/:id</code>                 DELETE 删除帖子，返回空文档。</li>
+</ul>
+<h3 id="回复API_：_REPLYS">回复API ： REPLYS</h3><ul>
+<li><code>/api/v1/reply</code>             POST   创建一个回复</li>
+<li><code>/api/v1/reply/:reply_id</code> DELETE 删除某个回复</li>
+</ul>
+<h4 id="诊断-2">诊断</h4><ul>
+<li>资源没有使用复数形式</li>
+<li><code>reply_id</code>冗余</li>
+</ul>
+<h4 id="修改后-2">修改后</h4><ul>
+<li><code>replys</code>         POST   创建一个回复，返回该回复(这里应该增加帖子的回复数目)</li>
+<li><code>replys/:id</code>     DELETE 删除某个回复,返回空文档(这里应该减少帖子的回复数目)</li>
+</ul>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2015/11/12/hello/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          hello
+        
+      </div>
+    </a>
+  
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">分享到：</span>
+		<a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+		<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="restful-note" data-title="Restful API浅析--设计原则与案例修正" data-url="http://cshuo.github.io/2015/11/04/restful-note/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"cshuo"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-center">
+    		Copyright&copy; 2015 cshuo
+			<br><br>本站访客数<span id="busuanzi_value_site_uv"></span>人次
+    	</div>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="/js/main.js" type="text/javascript"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+
+  </div>
+</body>
+</html>

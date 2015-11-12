@@ -108,7 +108,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/django/" style="font-size: 10px;">django</a> <a href="/tags/hello/" style="font-size: 10px;">hello</a>
+						<a href="/tags/django/" style="font-size: 10px;">django</a> <a href="/tags/hello/" style="font-size: 10px;">hello</a> <a href="/tags/restful/" style="font-size: 10px;">restful</a>
 					</div>
 				</section>
 				
@@ -184,11 +184,11 @@
 </nav>
       <div class="body-wrap">
   
-    <article id="post-hello" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-django-filebrowser" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2015/11/09/hello/" class="article-date">
-  	<time datetime="2015-11-09T08:58:34.000Z" itemprop="datePublished">2015-11-09</time>
+      <a href="/2015/11/12/django-filebrowser/" class="article-date">
+  	<time datetime="2015-11-12T03:31:47.000Z" itemprop="datePublished">2015-11-12</time>
 </a>
     </div>
   
@@ -201,7 +201,69 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2015/11/09/hello/">hello</a>
+      <a class="article-title" href="/2015/11/12/django-filebrowser/">django1.8 服务器目录管理 -- grappelli + filebrowser</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>FileBrowser是对Django 管理员界面的一个扩展，目的是：</p>
+<ul>
+<li>浏览服务器上的目录，包括上传、删除、编辑和重命名文件。</li>
+<li>使用FileBrowseField将图像/文档添加到django的models或database中。</li>
+<li>使用TinyMCE选择图像或文档。
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/django/">django</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a  href="/2015/11/12/django-filebrowser/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  
+    <article id="post-hello" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/11/12/hello/" class="article-date">
+  	<time datetime="2015-11-12T03:31:20.000Z" itemprop="datePublished">2015-11-12</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/11/12/hello/">hello</a>
     </h1>
   
 
@@ -225,7 +287,7 @@
 
       
         <p class="article-more-link">
-          <a  href="/2015/11/09/hello/#more">more >></a>
+          <a  href="/2015/11/12/hello/#more">more >></a>
         </p>
       
       <div class="clearfix"></div>
@@ -242,11 +304,11 @@
 
 
   
-    <article id="post-django-filebrowser" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-restful-note" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2015/11/09/django-filebrowser/" class="article-date">
-  	<time datetime="2015-11-09T08:54:37.000Z" itemprop="datePublished">2015-11-09</time>
+      <a href="/2015/11/04/restful-note/" class="article-date">
+  	<time datetime="2015-11-03T16:00:00.000Z" itemprop="datePublished">2015-11-04</time>
 </a>
     </div>
   
@@ -259,7 +321,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2015/11/09/django-filebrowser/">django1.8 服务器目录管理 -- grappelli + filebrowser</a>
+      <a class="article-title" href="/2015/11/04/restful-note/">Restful API浅析--设计原则与案例修正</a>
     </h1>
   
 
@@ -268,19 +330,10 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>FileBrowser是对Django 管理员界面的一个扩展，目的是：</p>
-<ul>
-<li>浏览服务器上的目录，包括上传、删除、编辑和重命名文件。<ul>
-<li>test  <ul>
-<li>test</li>
-<li>test1</li>
-<li>test2</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>使用FileBrowseField将图像/文档添加到django的models或database中。</li>
-<li>使用TinyMCE选择图像或文档。
+        <p><strong><em>转载: <a href="http://nap-group.herokuapp.com/2015-11/restful-note/">Restful API浅析 之设计原则与案例修正</a></em></strong></p>
+<blockquote>
+<p>之前写Restful的服务器端API，写的不好，痛定思痛，决心好好搞懂Restful。<br>在这一篇中我们首先搞懂Rest的含义，然后以我编写的失败的api为例，讲解如何编写出符合Rest风格的API。注意本篇指导原则一节大部分来自阮一峰老师的<a href="http://www.ruanyifeng.com/blog/2014/05/restful_api.html">RESTful API 设计指南</a></p>
+</blockquote>
       
     </div>
     
@@ -288,14 +341,18 @@
       
       
 	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/django/">django</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/restful/">restful</a></li></ul>
 	</div>
 
       
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/web/">web</a>
+	</div>
+
 
       
         <p class="article-more-link">
-          <a  href="/2015/11/09/django-filebrowser/#more">more >></a>
+          <a  href="/2015/11/04/restful-note/#more">more >></a>
         </p>
       
       <div class="clearfix"></div>
