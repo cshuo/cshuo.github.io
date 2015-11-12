@@ -15,7 +15,7 @@
 <meta property="og:description" content="转载自MCL: Restful API浅析 之设计原则与案例修正
 
 之前写Restful的服务器端API，写的不好，痛定思痛，决心好好搞懂Restful。在这一篇中我们首先搞懂Rest的含义，然后以我编写的失败的api为例，讲解如何编写出符合Rest风格的API。注意本篇指导原则一节大部分来自阮一峰老师的RESTful API 设计指南">
-<meta property="og:updated_time" content="2015-11-12T03:35:39.000Z">
+<meta property="og:updated_time" content="2015-11-12T11:28:00.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Restful API浅析--设计原则与案例修正">
 <meta name="twitter:description" content="转载自MCL: Restful API浅析 之设计原则与案例修正
@@ -259,6 +259,7 @@
 <ul>
 <li><a href="https://bourgeois.me/rest/" target="_blank" rel="external">Some REST best practices</a></li>
 <li><a href="http://codeplanet.io/principles-good-restful-api-design/" target="_blank" rel="external">Principles of good RESTful API Design</a></li>
+<li><a href="https://www.ibm.com/developerworks/cn/webservices/ws-restful/#ibm-pcon" target="_blank" rel="external">基于 REST 的 Web 服务：基础</a></li>
 </ul>
 <h2 id="指导原则">指导原则</h2><h3 id="域名">域名</h3><p>应该尽量将API部署在专用域名之下,如:<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">https:</span><span class="comment">//api.example.com</span></span><br></pre></td></tr></table></figure></p>
 <p>如果确定API很简单，不会有进一步扩展，可以考虑放在主域名下:<br><figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="label">https:</span>//example<span class="preprocessor">.org</span>/api/</span><br></pre></td></tr></table></figure></p>
