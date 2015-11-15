@@ -46,7 +46,7 @@
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+  <link rel="shortcut icon" type="image/x-icon" href="/img/favicon.png?v=0.4.5.2" />
 
 
 
@@ -125,7 +125,7 @@
   
 
   
-    <ul id="menu" class="menu ">
+    <ul id="menu" class="menu menu-left">
       
         
         <li class="menu-item menu-item-home">
@@ -134,6 +134,16 @@
               <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
             
             首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
           </a>
         </li>
       
@@ -157,12 +167,43 @@
           </a>
         </li>
       
+        
+        <li class="menu-item menu-item-about">
+          <a href="http://moon.nju.edu.cn/people/shuocheng/" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
 
       
       
     </ul>
   
 
+  
+    <div class="site-search">
+      
+  
+  <form class="site-search-form">
+    <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+  </form>
+
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'tohGixzGcGX4Z7WH1XHp','2.0.0');
+</script>
+
+
+
+    </div>
   
 </nav>
 
@@ -212,6 +253,13 @@
           
 
           
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2015/11/13/hello/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/11/13/hello/" itemprop="commentsCount"></span>
+                </a>
+              </span>
             
           
 
@@ -284,6 +332,10 @@
         
   <div class="comments" id="comments">
     
+      <div class="ds-thread" data-thread-key="2015/11/13/hello/"
+           data-title="hello" data-url="http://cshuo.github.io/2015/11/13/hello/">
+      </div>
+    
   </div>
 
 
@@ -331,10 +383,10 @@
           </div>
 
           <div class="site-state-item site-state-categories">
-            
+            <a href="/categories">
               <span class="site-state-item-count">1</span>
               <span class="site-state-item-name">分类</span>
-              
+              </a>
           </div>
 
           <div class="site-state-item site-state-tags">
@@ -355,6 +407,22 @@
                 <a href="https://github.com/cshuo" target="_blank">
                   
                     <i class="fa fa-github"></i> GitHub
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/2411802345/profile?topnav=1&wvr=6" target="_blank">
+                  
+                    <i class="fa fa-weibo"></i> Weibo
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.facebook.com/shuo.cheng.92" target="_blank">
+                  
+                    <i class="fa fa-globe"></i> Facebook
                   
                 </a>
               </span>
@@ -430,7 +498,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright" >
+        <div class="copyright" align="center">
   
   &copy; 
   <span itemprop="copyrightYear">2015</span>
@@ -440,17 +508,23 @@
   <span class="author" itemprop="copyrightHolder">cshuo</span>
 </div>
 
-<div class="powered-by">
+<!--div class="powered-by">
   由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
-</div>
+</div-->
 
-<div class="theme-info">
+<!--div class="theme-info">
   主题 -
   <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
     NexT.Mist
   </a>
-</div>
+</div-->
 
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<div align="center">
+	本站访客数<span id="busuanzi_value_site_uv"><i class="fa fa-spinner fa-spin"></i></span>人次
+</div>
 
 
       </div>
@@ -466,11 +540,28 @@
 
   
     
-    
 
   
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"cshuo"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
 
 
+    
   
 
   
