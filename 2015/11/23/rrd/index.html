@@ -33,7 +33,7 @@
 <link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Data Structure," />
+  <meta name="keywords" content="RRD," />
 
 
 
@@ -49,16 +49,20 @@
 
 
 
-<meta name="description" content="Bloom Filter介绍">
+<meta name="description" content="本文是对开源监控工具Ganglia使用的RRD数据库的一个简单介绍，此外还有一些有关RRDTool的基本操作。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Bloom Filter">
-<meta property="og:url" content="http://yoursite.com/2015/11/17/Bloom-Filter/index.html">
+<meta property="og:title" content="RRDTool浅析">
+<meta property="og:url" content="http://yoursite.com/2015/11/23/rrd/index.html">
 <meta property="og:site_name" content="Blog Cshuo">
-<meta property="og:description" content="Bloom Filter介绍">
-<meta property="og:updated_time" content="2015-11-17T07:25:51.000Z">
+<meta property="og:description" content="本文是对开源监控工具Ganglia使用的RRD数据库的一个简单介绍，此外还有一些有关RRDTool的基本操作。">
+<meta property="og:image" content="http://yoursite.com/img/rrd_gra.jpg">
+<meta property="og:image" content="http://yoursite.com/rrd_dst.png">
+<meta property="og:image" content="http://yoursite.com/img/rra.png">
+<meta property="og:image" content="http://yoursite.com/img/cpu_user.png">
+<meta property="og:updated_time" content="2015-11-23T13:57:29.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Bloom Filter">
-<meta name="twitter:description" content="Bloom Filter介绍">
+<meta name="twitter:title" content="RRDTool浅析">
+<meta name="twitter:description" content="本文是对开源监控工具Ganglia使用的RRD数据库的一个简单介绍，此外还有一些有关RRDTool的基本操作。">
 
 
 
@@ -70,7 +74,7 @@
   };
 </script>
 
-  <title> Bloom Filter | Blog Cshuo </title>
+  <title> RRDTool浅析 | Blog Cshuo </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -231,7 +235,7 @@
             
             
               
-                Bloom Filter
+                RRDTool浅析
               
             
           </h1>
@@ -240,19 +244,34 @@
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2015-11-17T14:51:51+08:00" content="2015-11-17">
-              2015-11-17
+            <time itemprop="dateCreated" datetime="2015-11-23T19:44:04+08:00" content="2015-11-23">
+              2015-11-23
             </time>
           </span>
 
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分类于
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/监控/" itemprop="url" rel="index">
+                    <span itemprop="name">监控</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
           
 
           
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2015/11/17/Bloom-Filter/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/11/17/Bloom-Filter/" itemprop="commentsCount"></span>
+                <a href="/2015/11/23/rrd/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/11/23/rrd/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -271,7 +290,54 @@
       
 
       
-        <span itemprop="articleBody"><p><a href="http://www.cnblogs.com/heaad/archive/2011/01/02/1924195.html" target="_blank" rel="external">Bloom Filter介绍</a></p>
+        <span itemprop="articleBody"><blockquote>
+<p>本文是对开源监控工具Ganglia使用的RRD数据库的一个简单介绍，此外还有一些有关RRDTool的基本操作。<br><a id="more"></a></p>
+</blockquote>
+<h2 id="RRD数据库">RRD数据库</h2><p>RRD是Round Robin Database的缩写，是一种环形数据库，它是专门设计来存储时序数据的。每当有新的数据到来时，一般也会有一个时间戳伴随着被存储起来，这里的时间戳是epoch值。RRDTool是RRD数据库配套的一个工具，它可以安装在Unix或者Windows系统上，RRDTool提供了一系列的命令集来对RRD进行不同的操作。    </p>
+<p>RRD数据库与其他数据库的不同:      </p>
+<ul>
+<li>RRDTool既是后端工具，又是前端工具；之所以这么说，是因为作为数据库，首先RRDTool可以存储数据，此外，RRDTool也提供了一个根据数据库数据进行绘图的功能，这让它具备了前端的特性。<br><img src="/img/rrd_gra.jpg" alt=""></li>
+<li>对于线性数据库，一般新的数据都被插入到数据库表的最后，所以数据库的大小随着数据的插入而不断的增长；而对于RRD数据库，其大小在创建时就已经指定。简单的说，可以把RRD数据库想象成一个环，数据都被插入到环的周边，有一个指针时钟指向新的数据要插入到的位置，当指针达到起始点时，就会覆盖原来存在的数据，这样一来，数据库的大小就固定不变了，这也是“Round Robin”的由来。     </li>
+<li>其他数据库的数据都是被提供的，而RRD数据库可以通过配置，来计算旧的数据到新的数据之间的变化，并把这些信息存储起来。      </li>
+<li>其他数据库更新的驱动是新的数据被提供，而RRD数据库的更新是按照按照预先定义的时间间隔来进行的；如果在固定的事件间隔内没有获得新的数据，那么RRDTool将会存储一个UNKNOWN值，所以一般使用RRD数据库都会有一个脚本每隔一段时间就向RRD提供一个数据。   </li>
+</ul>
+<h3 id="RRD的基本结构">RRD的基本结构</h3><p>因为RRD数据库设计目的是监控，所以它的结构比较简单，创建一个RRD数据库的方式如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">rrdtool create target.rrd \     </span><br><span class="line">         --start <span class="number">1023654125</span> \     </span><br><span class="line">         --step <span class="number">300</span> \      </span><br><span class="line">         DS:mem:GAUGE:<span class="number">600</span>:<span class="number">0</span>:<span class="number">671744</span> \     </span><br><span class="line">         RRA:AVERAGE:<span class="number">0.5</span>:<span class="number">12</span>:<span class="number">24</span> \     </span><br><span class="line">         RRA:AVERAGE:<span class="number">0.5</span>:<span class="number">288</span>:<span class="number">31</span></span><br></pre></td></tr></table></figure>
+<p>下面是相关的一些基本概念：    </p>
+<ul>
+<li><p>DS: Data Source, 它指的是设备上被监控的变量，一个RRD数据库中可能有多个DS。其声明格式如下：</p>
+<blockquote>
+<p>DS:variable_name:DST:heartbeat:min:max      </p>
+</blockquote>
+<p>  每隔一个step, DS的一个新的值就会到来，然后数据库就会被更新，这个值也被叫做    PDP(Primary Data Point)，PDP的范围由min,max来制定，如果在heartbeat时间内没有    收到数据，那么该PDP就会被置为UNKNOWN。在上面的例子中，每隔300s就会产生一个新的    PDP。</p>
+</li>
+<li><p>DST: Data Source Type, 指的是DS的类型，可以是COUNTER, DERIVE, ABSOLUTE, GAUGE，详细解释如下表：<br><img src="rrd_dst.png" alt=""></p>
+</li>
+<li>CF: Consolidation Function, 是指合并数据的方式，可选的有AVERAGE, MAX, MIN, LAST。</li>
+<li><p>RRA: Round Robin Archive, 是对采集到的数据以某种方式(CF)的归档。声明格式如下</p>
+<blockquote>
+<p>RRA:CF:xff:step:rows    </p>
+</blockquote>
+<p>  在这里又有一个新的概念CDP(consolidated data point), 一个CPD是把step个PDP按照指定的CF进行合并得到的一个数值，而这个RRA中包含rows个CDPs。这里的xff是指CDP合并时允许出现的UNKNOWN的最大比率，在本例中即是，如果step个PDP中有一半是UNKNOWN，那么该CDP是UKNOWN,否则就去不是UKNOWN值的平均值。如下图是RRA的结构以及数据更新的方式：<br><img src="/img/rra.png" alt=""><br>如图所示，在RRD数据库中会为一个RRA分配一部分空间，n(step)个sample(PDP)合并成一个CDP然后存储到这块区域的开头位置，如果空间已满则旧的数据会被覆盖，这样的方式就保证了数据库的大小是不会增长的，同时将PDP合并成CDP的做法，又可以保证RRD可以存储很长一段时间的数据。</p>
+</li>
+</ul>
+<p>了解了这些基本概念之后，上面的这个例子就比较容易理解了,首先给这个数据库命名为target.rrd，数据的开始时间是epoch时间1023654125，每隔300s获取一个PDP，然后DS制定了实际被监控的变量及其类型和值域，最后定义了两个RRA，对于第一个RRA, 12(steps)个PDPs以平均(CF)的方式进行合并得到一个CDP，24个这样的CDP组成一个RRA归档。PDP之间的间隔是300s,所以CDP之间的间隔就是12*300，即1小时，24个这样的CDP就是1天，因此我们可以得知，第一个RRA就是mem的一天的监控统计。</p>
+<h2 id="RRDTool常用命令">RRDTool常用命令</h2><h3 id="rrdtool_dump">rrdtool dump</h3><blockquote>
+<p>rrdtool dump filename.rrd [filename.xml] [–header|-h {none,xsd,dtd}] [–no-header|-n] [–daemon|-d address] [&gt; filename.xml]</p>
+</blockquote>
+<p>含义：将一个rrd数据库导出为xml文件<br>示例：<br><code>rrdtool dump load_one.rrd test.xml</code></p>
+<h3 id="rrdtool_fetch">rrdtool fetch</h3><blockquote>
+<p>rrdtool fetch filename CF [–resolution|-r resolution] [–start|-s start] [–end|-e end] [–align-start|-a] [–daemon|-d address]</p>
+</blockquote>
+<p>含义：从一个rrd数据库根据条件取出数据<br>示例：<br><code>rrdtool fetch load_one.rrd AVERAGE -r 12 -s e-1200 -e now</code></p>
+<h3 id="rrdtool_xport">rrdtool xport</h3><blockquote>
+<p>rrdtool xport [-s|–start seconds] [-e|–end seconds] [-m|–maxrows rows] [–step value] [–json] [–enumds] [–daemon|-d address] [DEF:vname=rrd:ds-name:CF] [CDEF:vname=rpn-expression] [XPORT:vname[:legend]] </p>
+</blockquote>
+<p>含义：可以从若干个RRD中得到XML或JSON格式的数据。<br>示例：<br><code>rrdtool xport --start end-1h --end now --step 10 DEF:ds1=load_one.rrd:sum:AVERAGE DEF:ds2=load_one.rrd:num:AVERAGE XPORT:ds1:sum XPORT:ds2:num</code></p>
+<h3 id="rrdtool_graph">rrdtool graph</h3><blockquote>
+<p>rrdtool graph|graphv filename [option …] [data definition …] [data calculation …] [variable definition …] [graph element …] [print element …]</p>
+</blockquote>
+<p>含义：根据RRD数据库中的数据绘制图形，生成图片。<br>示例：<br><code>rrdtool graph new.png --end now --start end-150 --title cpu_user --vertical-label % --width 250 --height 150 DEF:ds=cpu_user.rrd:sum:AVERAGE:step=3 AREA:ds#0000FF:cpu_user</code><br>生成的图片：<br><img src="/img/cpu_user.png" alt=""></p>
 </span>
       
     </div>
@@ -280,7 +346,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Data-Structure/" rel="tag">#Data Structure</a>
+            <a href="/tags/RRD/" rel="tag">#RRD</a>
           
         </div>
       
@@ -289,17 +355,13 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/11/15/django-filebrowser/" rel="next" title="django1.8 服务器目录管理 -- grappelli + filebrowser">
-                <i class="fa fa-chevron-left"></i> django1.8 服务器目录管理 -- grappelli + filebrowser
+              <a href="/2015/11/17/Bloom-Filter/" rel="next" title="Bloom Filter">
+                <i class="fa fa-chevron-left"></i> Bloom Filter
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2015/11/23/rrd/" rel="prev" title="RRDTool浅析">
-                RRDTool浅析 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -326,8 +388,8 @@
         
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2015/11/17/Bloom-Filter/"
-           data-title="Bloom Filter" data-url="http://yoursite.com/2015/11/17/Bloom-Filter/">
+      <div class="ds-thread" data-thread-key="2015/11/23/rrd/"
+           data-title="RRDTool浅析" data-url="http://yoursite.com/2015/11/23/rrd/">
       </div>
     
   </div>
@@ -474,7 +536,7 @@
               
             
             
-              <p class="post-toc-empty">此文章未包含目录</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#RRD数据库"><span class="nav-number">1.</span> <span class="nav-text">RRD数据库</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#RRD的基本结构"><span class="nav-number">1.1.</span> <span class="nav-text">RRD的基本结构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RRDTool常用命令"><span class="nav-number">2.</span> <span class="nav-text">RRDTool常用命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#rrdtool_dump"><span class="nav-number">2.1.</span> <span class="nav-text">rrdtool dump</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rrdtool_fetch"><span class="nav-number">2.2.</span> <span class="nav-text">rrdtool fetch</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rrdtool_xport"><span class="nav-number">2.3.</span> <span class="nav-text">rrdtool xport</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rrdtool_graph"><span class="nav-number">2.4.</span> <span class="nav-text">rrdtool graph</span></a></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator">
