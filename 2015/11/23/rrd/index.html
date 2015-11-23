@@ -59,7 +59,7 @@
 <meta property="og:image" content="http://yoursite.com/rrd_dst.png">
 <meta property="og:image" content="http://yoursite.com/img/rra.png">
 <meta property="og:image" content="http://yoursite.com/img/cpu_user.png">
-<meta property="og:updated_time" content="2015-11-23T13:57:29.000Z">
+<meta property="og:updated_time" content="2015-11-23T14:00:03.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RRDTool浅析">
 <meta name="twitter:description" content="本文是对开源监控工具Ganglia使用的RRD数据库的一个简单介绍，此外还有一些有关RRDTool的基本操作。">
@@ -325,19 +325,20 @@
 <h2 id="RRDTool常用命令">RRDTool常用命令</h2><h3 id="rrdtool_dump">rrdtool dump</h3><blockquote>
 <p>rrdtool dump filename.rrd [filename.xml] [–header|-h {none,xsd,dtd}] [–no-header|-n] [–daemon|-d address] [&gt; filename.xml]</p>
 </blockquote>
-<p>含义：将一个rrd数据库导出为xml文件<br>示例：<br><code>rrdtool dump load_one.rrd test.xml</code></p>
+<p>含义：将一个rrd数据库导出为xml文件<br>示例：<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">rrdtool</span> <span class="tag">dump</span> <span class="tag">load_one</span><span class="class">.rrd</span> <span class="tag">test</span><span class="class">.xml</span></span><br></pre></td></tr></table></figure></p>
 <h3 id="rrdtool_fetch">rrdtool fetch</h3><blockquote>
 <p>rrdtool fetch filename CF [–resolution|-r resolution] [–start|-s start] [–end|-e end] [–align-start|-a] [–daemon|-d address]</p>
 </blockquote>
-<p>含义：从一个rrd数据库根据条件取出数据<br>示例：<br><code>rrdtool fetch load_one.rrd AVERAGE -r 12 -s e-1200 -e now</code></p>
+<p>含义：从一个rrd数据库根据条件取出数据<br>示例：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rrdtool fetch load_one.rrd AVERAGE -r <span class="number">12</span> <span class="operator">-s</span> e-<span class="number">1200</span> <span class="operator">-e</span> now</span><br></pre></td></tr></table></figure></p>
 <h3 id="rrdtool_xport">rrdtool xport</h3><blockquote>
 <p>rrdtool xport [-s|–start seconds] [-e|–end seconds] [-m|–maxrows rows] [–step value] [–json] [–enumds] [–daemon|-d address] [DEF:vname=rrd:ds-name:CF] [CDEF:vname=rpn-expression] [XPORT:vname[:legend]] </p>
 </blockquote>
-<p>含义：可以从若干个RRD中得到XML或JSON格式的数据。<br>示例：<br><code>rrdtool xport --start end-1h --end now --step 10 DEF:ds1=load_one.rrd:sum:AVERAGE DEF:ds2=load_one.rrd:num:AVERAGE XPORT:ds1:sum XPORT:ds2:num</code></p>
+<p>含义：可以从若干个RRD中得到XML或JSON格式的数据。<br>示例：<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">rrdtool xport --start <span class="keyword">end</span>-<span class="number">1</span>h --<span class="keyword">end</span> now --step <span class="number">10</span> </span><br><span class="line"><span class="constant">DEF</span><span class="symbol">:ds1=load_one</span>.<span class="symbol">rrd:</span><span class="symbol">sum:</span><span class="constant">AVERAGE</span> <span class="constant">DEF</span><span class="symbol">:ds2=load_one</span>.<span class="symbol">rrd:</span><span class="symbol">num:</span><span class="constant">AVERAGE</span> <span class="constant">XPORT</span><span class="symbol">:ds1</span><span class="symbol">:sum</span> <span class="constant">XPORT</span><span class="symbol">:ds2</span><span class="symbol">:num</span></span><br></pre></td></tr></table></figure></p>
 <h3 id="rrdtool_graph">rrdtool graph</h3><blockquote>
 <p>rrdtool graph|graphv filename [option …] [data definition …] [data calculation …] [variable definition …] [graph element …] [print element …]</p>
 </blockquote>
-<p>含义：根据RRD数据库中的数据绘制图形，生成图片。<br>示例：<br><code>rrdtool graph new.png --end now --start end-150 --title cpu_user --vertical-label % --width 250 --height 150 DEF:ds=cpu_user.rrd:sum:AVERAGE:step=3 AREA:ds#0000FF:cpu_user</code><br>生成的图片：<br><img src="/img/cpu_user.png" alt=""></p>
+<p>含义：根据RRD数据库中的数据绘制图形，生成图片。<br>示例：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rrdtool graph <span class="keyword">new</span>.png --end now --start end-<span class="number">150</span> --title cpu_user --vertical-label % --width <span class="number">250</span> --height <span class="number">150</span> DEF:ds=cpu_user.rrd:sum:AVERAGE:step=<span class="number">3</span> AREA:ds<span class="preprocessor">#<span class="number">0000F</span>F:cpu_user</span></span><br></pre></td></tr></table></figure></p>
+<p>生成的图片：<br><img src="/img/cpu_user.png" alt=""></p>
 </span>
       
     </div>
