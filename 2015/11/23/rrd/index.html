@@ -56,10 +56,10 @@
 <meta property="og:site_name" content="Blog Cshuo">
 <meta property="og:description" content="本文是对开源监控工具Ganglia使用的RRD数据库的一个简单介绍，此外还有一些有关RRDTool的基本操作。">
 <meta property="og:image" content="http://yoursite.com/img/rrd_gra.jpg">
-<meta property="og:image" content="http://yoursite.com/rrd_dst.png">
+<meta property="og:image" content="http://yoursite.com/img/rrd_dst.png">
 <meta property="og:image" content="http://yoursite.com/img/rra.png">
 <meta property="og:image" content="http://yoursite.com/img/cpu_user.png">
-<meta property="og:updated_time" content="2015-11-23T14:01:05.000Z">
+<meta property="og:updated_time" content="2015-11-29T03:33:11.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RRD浅析">
 <meta name="twitter:description" content="本文是对开源监控工具Ganglia使用的RRD数据库的一个简单介绍，此外还有一些有关RRDTool的基本操作。">
@@ -311,7 +311,7 @@
 </blockquote>
 <p>  每隔一个step, DS的一个新的值就会到来，然后数据库就会被更新，这个值也被叫做    PDP(Primary Data Point)，PDP的范围由min,max来制定，如果在heartbeat时间内没有    收到数据，那么该PDP就会被置为UNKNOWN。在上面的例子中，每隔300s就会产生一个新的    PDP。</p>
 </li>
-<li><p>DST: Data Source Type, 指的是DS的类型，可以是COUNTER, DERIVE, ABSOLUTE, GAUGE，详细解释如下表：<br><img src="rrd_dst.png" alt=""></p>
+<li><p>DST: Data Source Type, 指的是DS的类型，可以是COUNTER, DERIVE, ABSOLUTE, GAUGE，详细解释如下表：<br><img src="/img/rrd_dst.png" alt=""></p>
 </li>
 <li>CF: Consolidation Function, 是指合并数据的方式，可选的有AVERAGE, MAX, MIN, LAST。</li>
 <li><p>RRA: Round Robin Archive, 是对采集到的数据以某种方式(CF)的归档。声明格式如下</p>
