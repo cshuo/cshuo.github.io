@@ -33,7 +33,7 @@
 <link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Data Structure," />
+  <meta name="keywords" content="openstack," />
 
 
 
@@ -49,16 +49,16 @@
 
 
 
-<meta name="description" content="Bloom Filter介绍Bloom Filter介绍">
+<meta name="description" content="在Kolla之前部署过Openstack的都知道这是一件多么繁琐的任务，不过熟悉Chef或Puppe的童鞋可能说完全可以通过这些工具自动化的部署，但是对于没接触过这些工具的人来说，使用它们来编写Openstack自动部署脚本同样令人头疼；正是在这样的大背景下，Kolla横空出世，其宗旨是: “to provide production-ready containers and deployment">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Bloom Filter">
-<meta property="og:url" content="http://yoursite.com/2015/11/17/Bloom-Filter/index.html">
+<meta property="og:title" content="Deploy Openstack-Mitaka with Kolla in Ubuntu 14.04">
+<meta property="og:url" content="http://yoursite.com/2016/05/26/kolla-mitaka-ubuntu-14-04/index.html">
 <meta property="og:site_name" content="Blog Cshuo">
-<meta property="og:description" content="Bloom Filter介绍Bloom Filter介绍">
-<meta property="og:updated_time" content="2016-05-15T08:43:25.000Z">
+<meta property="og:description" content="在Kolla之前部署过Openstack的都知道这是一件多么繁琐的任务，不过熟悉Chef或Puppe的童鞋可能说完全可以通过这些工具自动化的部署，但是对于没接触过这些工具的人来说，使用它们来编写Openstack自动部署脚本同样令人头疼；正是在这样的大背景下，Kolla横空出世，其宗旨是: “to provide production-ready containers and deployment">
+<meta property="og:updated_time" content="2016-05-27T01:48:35.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Bloom Filter">
-<meta name="twitter:description" content="Bloom Filter介绍Bloom Filter介绍">
+<meta name="twitter:title" content="Deploy Openstack-Mitaka with Kolla in Ubuntu 14.04">
+<meta name="twitter:description" content="在Kolla之前部署过Openstack的都知道这是一件多么繁琐的任务，不过熟悉Chef或Puppe的童鞋可能说完全可以通过这些工具自动化的部署，但是对于没接触过这些工具的人来说，使用它们来编写Openstack自动部署脚本同样令人头疼；正是在这样的大背景下，Kolla横空出世，其宗旨是: “to provide production-ready containers and deployment">
 
 
 
@@ -70,7 +70,7 @@
   };
 </script>
 
-  <title> Bloom Filter | Blog Cshuo </title>
+  <title> Deploy Openstack-Mitaka with Kolla in Ubuntu 14.04 | Blog Cshuo </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -231,7 +231,7 @@
             
             
               
-                Bloom Filter
+                Deploy Openstack-Mitaka with Kolla in Ubuntu 14.04
               
             
           </h1>
@@ -240,19 +240,34 @@
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2015-11-17T14:51:51+08:00" content="2015-11-17">
-              2015-11-17
+            <time itemprop="dateCreated" datetime="2016-05-26T22:53:00+08:00" content="2016-05-26">
+              2016-05-26
             </time>
           </span>
 
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分类于
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/OpenStack/" itemprop="url" rel="index">
+                    <span itemprop="name">OpenStack</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
           
 
           
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2015/11/17/Bloom-Filter/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/11/17/Bloom-Filter/" itemprop="commentsCount"></span>
+                <a href="/2016/05/26/kolla-mitaka-ubuntu-14-04/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/26/kolla-mitaka-ubuntu-14-04/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -271,7 +286,31 @@
       
 
       
-        <span itemprop="articleBody"><p><a href="http://www.cnblogs.com/heaad/archive/2011/01/02/1924195.html" target="_blank" rel="external">Bloom Filter介绍</a><br><a href="http://www.cnblogs.com/heaad/archive/2011/01/02/1924195.html" target="_blank" rel="external">Bloom Filter介绍</a></p>
+        <span itemprop="articleBody"><blockquote>
+<p>在Kolla之前部署过Openstack的都知道这是一件多么繁琐的任务，不过熟悉Chef或Puppe<br>的童鞋可能说完全可以通过这些工具自动化的部署，但是对于没接触过这些工具的人来说，使用它们来编写Openstack自动部署脚本同样令人头疼；正是在这样的大背景下，Kolla横空出世，其宗旨是: “to provide production-ready containers and deployment tools for operating OpenStack clouds”.<br>使用Kolla,部署Openstack可以说是傻瓜式的操作体验，下面来介绍基于ubuntu 14.04, 使用Mitaka版本Kolla进行多节点Openstack部署的详细步骤，以及本人遇到的所有大坑…<br><a id="more"></a></p>
+</blockquote>
+<h2 id="背景">背景</h2><p>由于条件限制，我是使用Vagrant(1.7.4)起了两个虚拟机分别作为控制节点和计算节点，虚拟机的基本配置见(链接). 不过在实际多节点部署时，出于高可用的目的，一般会有多个控制节点，并且会把网络服务Neutron和存储服务单独放在不同的节点上，在本文中，这些服务都仍在同一个控制节点上.</p>
+<h2 id="基本环境">基本环境</h2><ol>
+<li>升级内核(all)<br>一般来讲ubuntu 14.04 默认的内核3.13是支持docker的各项特性的，但是一些老版本的内核可能跟Docker使用的AUFS和OverlayFS存在一些兼容问题，以防万一，升级内核到最新版本肯定没错.<figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-<span class="built_in">get</span> -y install linux-<span class="built_in">image</span>-generic-lts-wily</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>安装完成之后，需要重启机器才能生效.</p>
+<ol>
+<li>安装Docker(all)<br>Kolla是将Openstack的所有服务组件都放在容器中，Docker当然是需要安装的。使用一下脚本安装最新的Docker:<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo curl -sSL <span class="string">https:</span><span class="comment">//get.docker.io | bash</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>安装完成后,docker只能在root用户下使用，使用一下命令将其他用户添加到docker组中:<br><figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo usermode -aG docker <span class="variable">$USERNAME</span></span><br></pre></td></tr></table></figure></p>
+<p>接着需要对docker-engine服务进行相关配置，<br><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo mount <span class="comment">--make-shared /run</span></span><br></pre></td></tr></table></figure></p>
+<p>重启docker,<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>sudo service docker restart</span><br></pre></td></tr></table></figure></p>
+<p>最后更新Docker的python库，<br><figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo pip <span class="keyword">install</span> -U docker-py</span><br></pre></td></tr></table></figure></p>
+<ol>
+<li><p>安装NTP(all)<br>Openstack中很多组件都有消息的传递，为保证系统的正确性，需要进行时钟的同步，推荐使用ntp进行时钟同步:</p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-<span class="keyword">get</span> install ntp</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装Ansible(controller)<br>推荐安装1.9.4版本,使用pip进行安装:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pip install -U ansible==<span class="number">1.9</span><span class="number">.4</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
 </span>
       
     </div>
@@ -280,7 +319,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Data-Structure/" rel="tag">#Data Structure</a>
+            <a href="/tags/openstack/" rel="tag">#openstack</a>
           
         </div>
       
@@ -289,17 +328,13 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/11/15/django-filebrowser/" rel="next" title="django1.8 服务器目录管理 -- grappelli + filebrowser">
-                <i class="fa fa-chevron-left"></i> django1.8 服务器目录管理 -- grappelli + filebrowser
+              <a href="/2015/11/23/rrd/" rel="next" title="RRD浅析">
+                <i class="fa fa-chevron-left"></i> RRD浅析
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2015/11/23/rrd/" rel="prev" title="RRD浅析">
-                RRD浅析 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -326,8 +361,8 @@
         
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2015/11/17/Bloom-Filter/"
-           data-title="Bloom Filter" data-url="http://yoursite.com/2015/11/17/Bloom-Filter/">
+      <div class="ds-thread" data-thread-key="2016/05/26/kolla-mitaka-ubuntu-14-04/"
+           data-title="Deploy Openstack-Mitaka with Kolla in Ubuntu 14.04" data-url="http://yoursite.com/2016/05/26/kolla-mitaka-ubuntu-14-04/">
       </div>
     
   </div>
@@ -474,7 +509,7 @@
               
             
             
-              <p class="post-toc-empty">此文章未包含目录</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基本环境"><span class="nav-number">2.</span> <span class="nav-text">基本环境</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator">
