@@ -33,7 +33,7 @@
 <link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="RRD," />
+  <meta name="keywords" content="Fuzzy," />
 
 
 
@@ -49,20 +49,17 @@
 
 
 
-<meta name="description" content="本文是对开源监控工具Ganglia使用的RRD数据库的一个简单介绍，此外还有一些有关RRDTool的基本操作。">
+<meta name="description" content="模糊逻辑广泛应用于在机器控制领域。“模糊”指的是这些逻辑可以解决单纯使用“True”或“False”不能解决的问题，比如”Partially True“。尽管其它的很多方法比如遗传算法或者神经网络在很多情境下都可以代替模糊控制，但模糊控制也有它不可代替的优点，比如它针对问题的解决方案很直观，易理解，模糊逻辑的设计往往是基于系统操作人员的经验。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="RRD浅析">
-<meta property="og:url" content="http://yoursite.com/2015/11/23/rrd/index.html">
+<meta property="og:title" content="Fuzzy Control - 模糊控制">
+<meta property="og:url" content="http://yoursite.com/2017/02/26/fuzzy_control/index.html">
 <meta property="og:site_name" content="Blog Cshuo">
-<meta property="og:description" content="本文是对开源监控工具Ganglia使用的RRD数据库的一个简单介绍，此外还有一些有关RRDTool的基本操作。">
-<meta property="og:image" content="http://yoursite.com/img/rrd_gra.jpg">
-<meta property="og:image" content="http://yoursite.com/img/rrd_dst.png">
-<meta property="og:image" content="http://yoursite.com/img/rra.png">
-<meta property="og:image" content="http://yoursite.com/img/cpu_user.png">
-<meta property="og:updated_time" content="2015-11-29T03:33:11.000Z">
+<meta property="og:description" content="模糊逻辑广泛应用于在机器控制领域。“模糊”指的是这些逻辑可以解决单纯使用“True”或“False”不能解决的问题，比如”Partially True“。尽管其它的很多方法比如遗传算法或者神经网络在很多情境下都可以代替模糊控制，但模糊控制也有它不可代替的优点，比如它针对问题的解决方案很直观，易理解，模糊逻辑的设计往往是基于系统操作人员的经验。">
+<meta property="og:image" content="http://yoursite.com/asdf">
+<meta property="og:updated_time" content="2017-02-26T05:35:42.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="RRD浅析">
-<meta name="twitter:description" content="本文是对开源监控工具Ganglia使用的RRD数据库的一个简单介绍，此外还有一些有关RRDTool的基本操作。">
+<meta name="twitter:title" content="Fuzzy Control - 模糊控制">
+<meta name="twitter:description" content="模糊逻辑广泛应用于在机器控制领域。“模糊”指的是这些逻辑可以解决单纯使用“True”或“False”不能解决的问题，比如”Partially True“。尽管其它的很多方法比如遗传算法或者神经网络在很多情境下都可以代替模糊控制，但模糊控制也有它不可代替的优点，比如它针对问题的解决方案很直观，易理解，模糊逻辑的设计往往是基于系统操作人员的经验。">
 
 
 
@@ -74,7 +71,7 @@
   };
 </script>
 
-  <title> RRD浅析 | Blog Cshuo </title>
+  <title> Fuzzy Control - 模糊控制 | Blog Cshuo </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -235,7 +232,7 @@
             
             
               
-                RRD浅析
+                Fuzzy Control - 模糊控制
               
             
           </h1>
@@ -244,8 +241,8 @@
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2015-11-23T19:44:04+08:00" content="2015-11-23">
-              2015-11-23
+            <time itemprop="dateCreated" datetime="2017-02-26T00:00:00+08:00" content="2017-02-26">
+              2017-02-26
             </time>
           </span>
 
@@ -254,8 +251,8 @@
               &nbsp; | &nbsp; 分类于
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/监控/" itemprop="url" rel="index">
-                    <span itemprop="name">监控</span>
+                  <a href="/categories/Control-Theory/" itemprop="url" rel="index">
+                    <span itemprop="name">Control Theory</span>
                   </a>
                 </span>
 
@@ -270,8 +267,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2015/11/23/rrd/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/11/23/rrd/" itemprop="commentsCount"></span>
+                <a href="/2017/02/26/fuzzy_control/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/02/26/fuzzy_control/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -291,54 +288,34 @@
 
       
         <span itemprop="articleBody"><blockquote>
-<p>本文是对开源监控工具Ganglia使用的RRD数据库的一个简单介绍，此外还有一些有关RRDTool的基本操作。<br><a id="more"></a></p>
+<p>模糊逻辑广泛应用于在机器控制领域。“模糊”指的是这些逻辑可以解决单纯使用“True”或“False”不能解决的问题，比如”Partially True“。尽管其它的很多方法比如遗传算法或者神经网络在很多情境下都可以代替模糊控制，但模糊控制也有它不可代替的优点，比如它针对问题的解决方案很直观，易理解，模糊逻辑的设计往往是基于系统操作人员的经验。</p>
 </blockquote>
-<h2 id="RRD数据库">RRD数据库</h2><p>RRD是Round Robin Database的缩写，是一种环形数据库，它是专门设计来存储时序数据的。每当有新的数据到来时，一般也会有一个时间戳伴随着被存储起来，这里的时间戳是epoch值。RRDTool是RRD数据库配套的一个工具，它可以安装在Unix或者Windows系统上，RRDTool提供了一系列的命令集来对RRD进行不同的操作。    </p>
-<p>RRD数据库与其他数据库的不同:      </p>
+<a id="more"></a>
+<p>模糊控制器概念上非常简单，它由输入阶段，处理阶段和输出阶段组成。输入阶段是将输入的数据(传感器、开关等)映射到合适的隶属函数以及对应的真值(true value) – 模糊化；处理阶段设计到调用相关的模糊规则，产生各自的结果，然后利用特定方法将结果进行综合；最后输出阶段将综合结果反模糊化，得到一个具体的输出值。</p>
+<h3 id="模糊化">模糊化</h3><p>模糊控制器的输入值通常被映射到若干个隶属函数，称作”模糊集“，该过程被称作“模糊化”。<br><figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">IF</span> brake temperature <span class="keyword">IS</span> warm <span class="keyword">AND</span> speed <span class="keyword">IS</span> <span class="keyword">not</span> very fast</span><br><span class="line">    <span class="keyword">THEN</span> brake pressure <span class="keyword">IS</span> slightly decreased.</span><br></pre></td></tr></table></figure></p>
+<p>比如这里“brake temperature”和”speed”都有自己对应的模糊集，如{cold, warm, hot}。输出值”brake pressure”也有自己模糊集{static, slightly increased, …}。最常用的隶属函数是三角形隶属函数。</p>
+<h3 id="处理阶段">处理阶段</h3><p>将输入值映射到对应的隶属函数以及真值之后，模糊控制器将基于模糊规则推理，判断采取什么动作。模糊规则是一些列的 IF-THEN语句，如：<br><figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">IF <span class="list">(<span class="keyword">temperature</span> is <span class="string">"cold"</span>)</span> THEN <span class="list">(<span class="keyword">heater</span> is <span class="string">"high"</span>)</span></span><br></pre></td></tr></table></figure></p>
+<p>IF部分被称作”antecedent”，THEN部分是”consequent”。如上例规则，它根据temperature的输入值映射到”cold”的真值，得到heater设置为”high“对应的真值。显然，”temperature”为cold的真值越大，heater设置为”high“的真值也越大。 通常一个模糊控制系统包含很多个模糊规则。在得到输入之后，往往若干个规则会被触发，得到若干个输出值和相应真值，下一步即使用特定方法进行综合，常用的是质心法：对于模糊控制的输出O，由对应的模糊集{r1, r2, r3, …, rn},通过规则推理得到结果及对应的真值分别是&lt;o1, mu(r1)&gt;, &lt;o2, mu(r2)&gt; … &lt;on, mu(rn)&gt;，使用质心法获取综合结果方式如下：</p>
+<p>$$O = \frac{\sum_{i=1}^n o_i \times mu(r_i)}{\sum_{i=1}^nmu(r_i)}$$</p>
+<h3 id="反模糊化">反模糊化</h3><p>反模糊化是模糊化的逆过程。</p>
+<p>如上所示的模糊规则给人一种疑惑，看起来好像不用模糊逻辑一样也可以达到目的，当然对于简单的系统确实可以不用模糊逻辑，但是通常复杂的系统的决策控制是基于一些列的模糊规则：</p>
 <ul>
-<li>RRDTool既是后端工具，又是前端工具；之所以这么说，是因为作为数据库，首先RRDTool可以存储数据，此外，RRDTool也提供了一个根据数据库数据进行绘图的功能，这让它具备了前端的特性。<br><img src="/img/rrd_gra.jpg" alt=""></li>
-<li>对于线性数据库，一般新的数据都被插入到数据库表的最后，所以数据库的大小随着数据的插入而不断的增长；而对于RRD数据库，其大小在创建时就已经指定。简单的说，可以把RRD数据库想象成一个环，数据都被插入到环的周边，有一个指针时钟指向新的数据要插入到的位置，当指针达到起始点时，就会覆盖原来存在的数据，这样一来，数据库的大小就固定不变了，这也是“Round Robin”的由来。     </li>
-<li>其他数据库的数据都是被提供的，而RRD数据库可以通过配置，来计算旧的数据到新的数据之间的变化，并把这些信息存储起来。      </li>
-<li>其他数据库更新的驱动是新的数据被提供，而RRD数据库的更新是按照按照预先定义的时间间隔来进行的；如果在固定的事件间隔内没有获得新的数据，那么RRDTool将会存储一个UNKNOWN值，所以一般使用RRD数据库都会有一个脚本每隔一段时间就向RRD提供一个数据。   </li>
+<li>所有相关的规则都被调用，使用输入值的隶属函数和对应的真值来决定规则的输出值。</li>
+<li>输出值然后同样被映射到一个隶属函数和真值来控制输出结果。</li>
+<li>规则的输出结果被综合程一个值，即反模糊化。</li>
 </ul>
-<h3 id="RRD的基本结构">RRD的基本结构</h3><p>因为RRD数据库设计目的是监控，所以它的结构比较简单，创建一个RRD数据库的方式如下：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">rrdtool create target.rrd \     </span><br><span class="line">         --start <span class="number">1023654125</span> \     </span><br><span class="line">         --step <span class="number">300</span> \      </span><br><span class="line">         DS:mem:GAUGE:<span class="number">600</span>:<span class="number">0</span>:<span class="number">671744</span> \     </span><br><span class="line">         RRA:AVERAGE:<span class="number">0.5</span>:<span class="number">12</span>:<span class="number">24</span> \     </span><br><span class="line">         RRA:AVERAGE:<span class="number">0.5</span>:<span class="number">288</span>:<span class="number">31</span></span><br></pre></td></tr></table></figure>
-<p>下面是相关的一些基本概念：    </p>
-<ul>
-<li><p>DS: Data Source, 它指的是设备上被监控的变量，一个RRD数据库中可能有多个DS。其声明格式如下：</p>
-<blockquote>
-<p>DS:variable_name:DST:heartbeat:min:max      </p>
-</blockquote>
-<p>  每隔一个step, DS的一个新的值就会到来，然后数据库就会被更新，这个值也被叫做    PDP(Primary Data Point)，PDP的范围由min,max来制定，如果在heartbeat时间内没有    收到数据，那么该PDP就会被置为UNKNOWN。在上面的例子中，每隔300s就会产生一个新的    PDP。</p>
-</li>
-<li><p>DST: Data Source Type, 指的是DS的类型，可以是COUNTER, DERIVE, ABSOLUTE, GAUGE，详细解释如下表：<br><img src="/img/rrd_dst.png" alt=""></p>
-</li>
-<li>CF: Consolidation Function, 是指合并数据的方式，可选的有AVERAGE, MAX, MIN, LAST。</li>
-<li><p>RRA: Round Robin Archive, 是对采集到的数据以某种方式(CF)的归档。声明格式如下</p>
-<blockquote>
-<p>RRA:CF:xff:step:rows    </p>
-</blockquote>
-<p>  在这里又有一个新的概念CDP(consolidated data point), 一个CPD是把step个PDP按照指定的CF进行合并得到的一个数值，而这个RRA中包含rows个CDPs。这里的xff是指CDP合并时允许出现的UNKNOWN的最大比率，在本例中即是，如果step个PDP中有一半是UNKNOWN，那么该CDP是UKNOWN,否则就去不是UKNOWN值的平均值。如下图是RRA的结构以及数据更新的方式：<br><img src="/img/rra.png" alt=""><br>如图所示，在RRD数据库中会为一个RRA分配一部分空间，n(step)个sample(PDP)合并成一个CDP然后存储到这块区域的开头位置，如果空间已满则旧的数据会被覆盖，这样的方式就保证了数据库的大小是不会增长的，同时将PDP合并成CDP的做法，又可以保证RRD可以存储很长一段时间的数据。</p>
-</li>
-</ul>
-<p>了解了这些基本概念之后，上面的这个例子就比较容易理解了,首先给这个数据库命名为target.rrd，数据的开始时间是epoch时间1023654125，每隔300s获取一个PDP，然后DS制定了实际被监控的变量及其类型和值域，最后定义了两个RRA，对于第一个RRA, 12(steps)个PDPs以平均(CF)的方式进行合并得到一个CDP，24个这样的CDP组成一个RRA归档。PDP之间的间隔是300s,所以CDP之间的间隔就是12*300，即1小时，24个这样的CDP就是1天，因此我们可以得知，第一个RRA就是mem的一天的监控统计。</p>
-<h2 id="RRDTool常用命令">RRDTool常用命令</h2><h3 id="rrdtool_dump">rrdtool dump</h3><blockquote>
-<p>rrdtool dump filename.rrd [filename.xml] [–header|-h {none,xsd,dtd}] [–no-header|-n] [–daemon|-d address] [&gt; filename.xml]</p>
-</blockquote>
-<p>含义：将一个rrd数据库导出为xml文件<br>示例：<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">rrdtool</span> <span class="tag">dump</span> <span class="tag">load_one</span><span class="class">.rrd</span> <span class="tag">test</span><span class="class">.xml</span></span><br></pre></td></tr></table></figure></p>
-<h3 id="rrdtool_fetch">rrdtool fetch</h3><blockquote>
-<p>rrdtool fetch filename CF [–resolution|-r resolution] [–start|-s start] [–end|-e end] [–align-start|-a] [–daemon|-d address]</p>
-</blockquote>
-<p>含义：从一个rrd数据库根据条件取出数据<br>示例：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rrdtool fetch load_one.rrd AVERAGE -r <span class="number">12</span> <span class="operator">-s</span> e-<span class="number">1200</span> <span class="operator">-e</span> now</span><br></pre></td></tr></table></figure></p>
-<h3 id="rrdtool_xport">rrdtool xport</h3><blockquote>
-<p>rrdtool xport [-s|–start seconds] [-e|–end seconds] [-m|–maxrows rows] [–step value] [–json] [–enumds] [–daemon|-d address] [DEF:vname=rrd:ds-name:CF] [CDEF:vname=rpn-expression] [XPORT:vname[:legend]] </p>
-</blockquote>
-<p>含义：可以从若干个RRD中得到XML或JSON格式的数据。<br>示例：<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">rrdtool xport --start <span class="keyword">end</span>-<span class="number">1</span>h --<span class="keyword">end</span> now --step <span class="number">10</span> </span><br><span class="line"><span class="constant">DEF</span><span class="symbol">:ds1=load_one</span>.<span class="symbol">rrd:</span><span class="symbol">sum:</span><span class="constant">AVERAGE</span> <span class="constant">DEF</span><span class="symbol">:ds2=load_one</span>.<span class="symbol">rrd:</span><span class="symbol">num:</span><span class="constant">AVERAGE</span> <span class="constant">XPORT</span><span class="symbol">:ds1</span><span class="symbol">:sum</span> <span class="constant">XPORT</span><span class="symbol">:ds2</span><span class="symbol">:num</span></span><br></pre></td></tr></table></figure></p>
-<h3 id="rrdtool_graph">rrdtool graph</h3><blockquote>
-<p>rrdtool graph|graphv filename [option …] [data definition …] [data calculation …] [variable definition …] [graph element …] [print element …]</p>
-</blockquote>
-<p>含义：根据RRD数据库中的数据绘制图形，生成图片。<br>示例：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rrdtool graph <span class="keyword">new</span>.png --end now --start end-<span class="number">150</span> --title cpu_user --vertical-label % --width <span class="number">250</span> --height <span class="number">150</span> DEF:ds=cpu_user.rrd:sum:AVERAGE:step=<span class="number">3</span> AREA:ds<span class="preprocessor">#<span class="number">0000F</span>F:cpu_user</span></span><br></pre></td></tr></table></figure></p>
-<p>生成的图片：<br><img src="/img/cpu_user.png" alt=""></p>
+<h3 id="模糊控制实例">模糊控制实例</h3><p>考虑构建一个简单的反馈控制器，输入是error和delta, 输出值是delta, 即error的变化率。</p>
+<p><img src="asdf" alt=""></p>
+<p>输入值error和输出值对应的模糊集如下：<br><figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">LP</span>: <span class="string"> large positive</span></span><br><span class="line"><span class="attribute">SP</span>: <span class="string"> small positive</span></span><br><span class="line"><span class="attribute">ZE</span>: <span class="string"> zero</span></span><br><span class="line"><span class="attribute">SN</span>: <span class="string"> small negative</span></span><br><span class="line"><span class="attribute">LN</span>: <span class="string"> large negative</span></span><br></pre></td></tr></table></figure></p>
+<p>输入值error，和delta对应的隶属函数如下：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">______________________________________________________________________________</span><br><span class="line">             -<span class="number">1</span>    -<span class="number">0.75</span>    -<span class="number">0.5</span>   -<span class="number">0.25</span>    <span class="number">0</span>     <span class="number">0.25</span>   <span class="number">0.5</span>   <span class="number">0.75</span>     <span class="number">1</span></span><br><span class="line">______________________________________________________________________________</span><br><span class="line"></span><br><span class="line">  mu(LP)      <span class="number">0</span>      <span class="number">0</span>        <span class="number">0</span>      <span class="number">0</span>      <span class="number">0</span>      <span class="number">0</span>     <span class="number">0.3</span>    <span class="number">0.7</span>     <span class="number">1</span></span><br><span class="line">  mu(SP)      <span class="number">0</span>      <span class="number">0</span>        <span class="number">0</span>      <span class="number">0</span>     <span class="number">0.3</span>    <span class="number">0.7</span>     <span class="number">1</span>     <span class="number">0.7</span>    <span class="number">0.3</span></span><br><span class="line">  mu(ZE)      <span class="number">0</span>      <span class="number">0</span>       <span class="number">0.3</span>    <span class="number">0.7</span>     <span class="number">1</span>     <span class="number">0.7</span>    <span class="number">0.3</span>     <span class="number">0</span>      <span class="number">0</span></span><br><span class="line">  mu(SN)     <span class="number">0.3</span>    <span class="number">0.7</span>       <span class="number">1</span>     <span class="number">0.7</span>    <span class="number">0.3</span>     <span class="number">0</span>      <span class="number">0</span>      <span class="number">0</span>      <span class="number">0</span></span><br><span class="line">  mu(LN)      <span class="number">1</span>     <span class="number">0.7</span>      <span class="number">0.3</span>     <span class="number">0</span>      <span class="number">0</span>      <span class="number">0</span>      <span class="number">0</span>      <span class="number">0</span>      <span class="number">0</span></span><br><span class="line">______________________________________________________________________________</span><br></pre></td></tr></table></figure></p>
+<p>输出值的反模糊化隶属函数如下：<br><figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="header">         LN           SN           ZE           SP           LP</span><br><span class="line">--------------------------------------------------------------------------</span></span><br><span class="line">-1.0  |  XXXXXXXXXX   XXX          :            :            :           |</span><br><span class="line">-0.75 |  XXXXXXX      XXXXXXX      :            :            :           |</span><br><span class="line">-0.5  |  XXX          XXXXXXXXXX   XXX          :            :           |</span><br><span class="line">-0.25 |  :            XXXXXXX      XXXXXXX      :            :           |</span><br><span class="line"><span class="code"> 0.0  |  :            XXX          XXXXXXXXXX   XXX          :           |</span></span><br><span class="line"><span class="code"> 0.25 |  :            :            XXXXXXX      XXXXXXX      :           |</span></span><br><span class="line"><span class="code"> 0.5  |  :            :            XXX          XXXXXXXXXX   XXX         |</span></span><br><span class="line"><span class="code"> 0.75 |  :            :            :            XXXXXXX      XXXXXXX     |</span></span><br><span class="line"><span class="header"> 1.0  |  :            :            :            XXX          XXXXXXXXXX  |</span><br><span class="line">--------------------------------------------------------------------------</span></span><br></pre></td></tr></table></figure></p>
+<p>模糊规则如下：<br><figure class="highlight inform7"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">rule 1:  IF e = ZE AND delta = ZE THEN output = ZE</span><br><span class="line">rule 2:  IF e = ZE AND delta = SP THEN output = SN</span><br><span class="line">rule 3:  IF e = SN AND delta = SN THEN output = LP</span><br><span class="line">rule 4:  IF e = LP OR  delta = LP THEN output = LN</span><br></pre></td></tr></table></figure></p>
+<p>反模糊化使用的是离散质心法：<br><figure class="highlight gcode"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SUM<span class="comment">( I = 1 TO 4 OF ( mu(I)</span> * output<span class="comment">(I)</span> ) ) / SUM<span class="comment">( I = 1 TO 4 OF mu(I)</span> )</span><br></pre></td></tr></table></figure></p>
+<p>现在考虑当前得到的输入是：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">e     = <span class="number">0.25</span></span><br><span class="line">delta = <span class="number">0.5</span></span><br></pre></td></tr></table></figure></p>
+<p>我们可以得到如下的模糊化：<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">________________________</span><br><span class="line">         e     delta</span><br><span class="line">________________________</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="title">mu</span><span class="params">(LP)</span></span>      <span class="number">0</span>      <span class="number">0.3</span></span><br><span class="line"><span class="function"><span class="title">mu</span><span class="params">(SP)</span></span>     <span class="number">0.7</span>      <span class="number">1</span></span><br><span class="line"><span class="function"><span class="title">mu</span><span class="params">(ZE)</span></span>     <span class="number">0.7</span>     <span class="number">0.3</span></span><br><span class="line"><span class="function"><span class="title">mu</span><span class="params">(SN)</span></span>      <span class="number">0</span>       <span class="number">0</span></span><br><span class="line"><span class="function"><span class="title">mu</span><span class="params">(LN)</span></span>      <span class="number">0</span>       <span class="number">0</span></span><br><span class="line">________________________</span><br></pre></td></tr></table></figure></p>
+<p>将之应用到规则1可以得到：<br><figure class="highlight inform7"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">rule 1: IF e = ZE AND delta = ZE THEN output = ZE</span><br><span class="line">mu(1) = MIN( 0.7, 0.3 ) = 0.3</span><br><span class="line">output(1) = 0</span><br></pre></td></tr></table></figure></p>
+<p>这里，mu(1)是规则1结果隶属函数的真值，如果使用质心法，就是规则1结果的权重。<br>output(1)是在输出值模糊集上结果隶属函数最大的值(ZE)。若使用质心法，对于单个规则的结果来说，就是质心的位置，如表2所示。该值独立于其真值。<br><br>同样对于其它的规则，由如下结果：<br><figure class="highlight inform7"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">rule 2:  IF e = ZE AND delta = SP THEN output = SN</span><br><span class="line">   mu(2)     = MIN( 0.7, 1 ) = 0.7   </span><br><span class="line">   output(2) = -0.5</span><br><span class="line"></span><br><span class="line">rule 3: IF e = SN AND delta = SN THEN output = LP</span><br><span class="line">   mu(3)     = MIN( 0.0, 0.0 ) = 0</span><br><span class="line">   output(3) = 1</span><br><span class="line"></span><br><span class="line">rule 4: IF e = LP OR  delta = LP THEN output = LN</span><br><span class="line">   mu(4)     = MAX( 0.0, 0.3 ) = 0.3</span><br><span class="line">   output(4) = -1</span><br></pre></td></tr></table></figure></p>
+<p>使用质心法得到最终结果是：<br>$$\frac{mu(1)\times output(1)+mu(2)\times output(2)+mu(3)\times output(3)+mu(4)\times output(4)}{mu(1)+mu(2)+mu(3)+mu(4)}<br>=-0.5$$<br>根据反模糊化隶属度表，可以得出最终的输出结果是SN。</p>
 </span>
       
     </div>
@@ -347,7 +324,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/RRD/" rel="tag">#RRD</a>
+            <a href="/tags/Fuzzy/" rel="tag">#Fuzzy</a>
           
         </div>
       
@@ -356,17 +333,13 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/11/17/Bloom-Filter/" rel="next" title="Bloom Filter">
-                <i class="fa fa-chevron-left"></i> Bloom Filter
+              <a href="/2016/09/10/live_migration/" rel="next" title="虚拟机迁移详解">
+                <i class="fa fa-chevron-left"></i> 虚拟机迁移详解
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/05/26/kolla-mitaka-ubuntu-14-04/" rel="prev" title="Deploy Openstack-Mitaka with Kolla in Ubuntu 14.04">
-                Deploy Openstack-Mitaka with Kolla in Ubuntu 14.04 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -393,8 +366,8 @@
         
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2015/11/23/rrd/"
-           data-title="RRD浅析" data-url="http://yoursite.com/2015/11/23/rrd/">
+      <div class="ds-thread" data-thread-key="2017/02/26/fuzzy_control/"
+           data-title="Fuzzy Control - 模糊控制" data-url="http://yoursite.com/2017/02/26/fuzzy_control/">
       </div>
     
   </div>
@@ -541,7 +514,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#RRD数据库"><span class="nav-number">1.</span> <span class="nav-text">RRD数据库</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#RRD的基本结构"><span class="nav-number">1.1.</span> <span class="nav-text">RRD的基本结构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RRDTool常用命令"><span class="nav-number">2.</span> <span class="nav-text">RRDTool常用命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#rrdtool_dump"><span class="nav-number">2.1.</span> <span class="nav-text">rrdtool dump</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rrdtool_fetch"><span class="nav-number">2.2.</span> <span class="nav-text">rrdtool fetch</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rrdtool_xport"><span class="nav-number">2.3.</span> <span class="nav-text">rrdtool xport</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rrdtool_graph"><span class="nav-number">2.4.</span> <span class="nav-text">rrdtool graph</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#模糊化"><span class="nav-number">1.</span> <span class="nav-text">模糊化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#处理阶段"><span class="nav-number">2.</span> <span class="nav-text">处理阶段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#反模糊化"><span class="nav-number">3.</span> <span class="nav-text">反模糊化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#模糊控制实例"><span class="nav-number">4.</span> <span class="nav-text">模糊控制实例</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator">
