@@ -33,7 +33,7 @@
 <link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="django," />
+  <meta name="keywords" content="monitoring,load testing," />
 
 
 
@@ -49,28 +49,19 @@
 
 
 
-<meta name="description" content="FileBrowser是对Django 管理员界面的一个扩展，目的是：
-
-浏览服务器上的目录，包括上传、删除、编辑和重命名文件。
-使用FileBrowseField将图像/文档添加到django的models或database中。
-使用TinyMCE选择图像或文档。">
+<meta name="description" content="Jmeter是常用的压测工具，使用Jmeter可以对Web应用进行性能测试，常用的性能指标有相应时间(RT)和吞吐率(TP)；Jmeter性能数据的持久化可以通过添加Backend listener来完成，但是这种方式会在InfluxDB里创建相当多的我并不care的measurements，且我所关心的metric并没有直接创建，所以就有了本文直接修改Jmeter的Apache core lib">
 <meta property="og:type" content="article">
-<meta property="og:title" content="django1.8 服务器目录管理 -- grappelli + filebrowser">
-<meta property="og:url" content="http://yoursite.com/2015/11/15/django-filebrowser/index.html">
+<meta property="og:title" content="使用InfluxDB && Grafana 对Jmeter实时数据持久化及展示">
+<meta property="og:url" content="http://yoursite.com/2016/12/26/jmeter_influxdb/index.html">
 <meta property="og:site_name" content="Blog Cshuo">
-<meta property="og:description" content="FileBrowser是对Django 管理员界面的一个扩展，目的是：
-
-浏览服务器上的目录，包括上传、删除、编辑和重命名文件。
-使用FileBrowseField将图像/文档添加到django的models或database中。
-使用TinyMCE选择图像或文档。">
-<meta property="og:updated_time" content="2015-11-15T04:27:21.000Z">
+<meta property="og:description" content="Jmeter是常用的压测工具，使用Jmeter可以对Web应用进行性能测试，常用的性能指标有相应时间(RT)和吞吐率(TP)；Jmeter性能数据的持久化可以通过添加Backend listener来完成，但是这种方式会在InfluxDB里创建相当多的我并不care的measurements，且我所关心的metric并没有直接创建，所以就有了本文直接修改Jmeter的Apache core lib">
+<meta property="og:image" content="https://raw.githubusercontent.com/cshuo/bpic/master/jmeter_run.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/cshuo/bpic/master/jmeter_measurements.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/cshuo/bpic/master/grafana.png">
+<meta property="og:updated_time" content="2017-07-03T14:57:12.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="django1.8 服务器目录管理 -- grappelli + filebrowser">
-<meta name="twitter:description" content="FileBrowser是对Django 管理员界面的一个扩展，目的是：
-
-浏览服务器上的目录，包括上传、删除、编辑和重命名文件。
-使用FileBrowseField将图像/文档添加到django的models或database中。
-使用TinyMCE选择图像或文档。">
+<meta name="twitter:title" content="使用InfluxDB && Grafana 对Jmeter实时数据持久化及展示">
+<meta name="twitter:description" content="Jmeter是常用的压测工具，使用Jmeter可以对Web应用进行性能测试，常用的性能指标有相应时间(RT)和吞吐率(TP)；Jmeter性能数据的持久化可以通过添加Backend listener来完成，但是这种方式会在InfluxDB里创建相当多的我并不care的measurements，且我所关心的metric并没有直接创建，所以就有了本文直接修改Jmeter的Apache core lib">
 
 
 
@@ -82,7 +73,7 @@
   };
 </script>
 
-  <title> django1.8 服务器目录管理 -- grappelli + filebrowser | Blog Cshuo </title>
+  <title> 使用InfluxDB && Grafana 对Jmeter实时数据持久化及展示 | Blog Cshuo </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -243,7 +234,7 @@
             
             
               
-                django1.8 服务器目录管理 -- grappelli + filebrowser
+                使用InfluxDB && Grafana 对Jmeter实时数据持久化及展示
               
             
           </h1>
@@ -252,19 +243,34 @@
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2015-11-15T12:27:21+08:00" content="2015-11-15">
-              2015-11-15
+            <time itemprop="dateCreated" datetime="2016-12-26T00:00:00+08:00" content="2016-12-26">
+              2016-12-26
             </time>
           </span>
 
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分类于
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/monitoring/" itemprop="url" rel="index">
+                    <span itemprop="name">monitoring</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
           
 
           
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2015/11/15/django-filebrowser/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/11/15/django-filebrowser/" itemprop="commentsCount"></span>
+                <a href="/2016/12/26/jmeter_influxdb/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/26/jmeter_influxdb/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -283,32 +289,38 @@
       
 
       
-        <span itemprop="articleBody"><p>FileBrowser是对Django 管理员界面的一个扩展，目的是：</p>
-<ul>
-<li>浏览服务器上的目录，包括上传、删除、编辑和重命名文件。</li>
-<li>使用FileBrowseField将图像/文档添加到django的models或database中。</li>
-<li>使用TinyMCE选择图像或文档。  </li>
-</ul>
+        <span itemprop="articleBody"><blockquote>
+<p>Jmeter是常用的压测工具，使用Jmeter可以对Web应用进行性能测试，常用的性能指标有相应时间(RT)和吞吐率(TP)；Jmeter性能数据的持久化可以通过添加Backend listener来完成，但是这种方式会在InfluxDB里创建相当多的我并不care的measurements，且我所关心的metric并没有直接创建，所以就有了本文直接修改Jmeter的Apache core library的方法。</p>
+</blockquote>
 <a id="more"></a>
-<h3 id="安装要求：">安装要求：</h3><ul>
-<li><a href="http://www.djangoproject.com" target="_blank" rel="external">Django1.8</a></li>
-<li>Grappelli<blockquote>
-<p>pip install django-grappelli</p>
-</blockquote>
-</li>
-<li>Pillow<blockquote>
-<p>Pillow是<a href="http://www.oschina.net/p/pil" target="_blank" rel="external">PIL</a>的替代版本，，如：改变图像大小，旋转图像，图像格式转换，色场空间转换，图像增强，直方图处理，插值和滤波等等。<br>首先安装一些图像处理包：<br>apt-get install libjpeg-dev<br>apt-get install libfreetype6-dev<br>apt-get install zlib1g-dev<br>apt-get install libpng12-dev<br>然后安装Pillow<br>#pip install pillow</p>
-</blockquote>
-</li>
+<h3 id="主要思路">主要思路</h3><p>使用Jmeter的Non-GUI模式运行一个测试，对应的输出如下所示：<br><img src="https://raw.githubusercontent.com/cshuo/bpic/master/jmeter_run.png" alt=""><br>我们想要持久化的就是图中那些metric:</p>
+<ul>
+<li>Avg, min, max Rt</li>
+<li>TP</li>
+<li>Total requests proessed</li>
+<li>Failed requests</li>
 </ul>
-<h3 id="FileBrowser安装与配置">FileBrowser安装与配置</h3><ul>
-<li>安装命令   <figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># pip install django-filebrowser</span></span><br></pre></td></tr></table></figure></li>
-<li>相关配置<br>在Django项目setttings.py中INSTALLED_APPS模块添加相关应用(在django.contrib.admin之前添加):    <figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">INSTALLED_APPS = <span class="list">(</span><br><span class="line"><span class="quoted">'grappelli</span>',</span><br><span class="line"><span class="quoted">'filebrowser</span>',</span><br><span class="line"><span class="quoted">'django</span>.contrib.admin',</span><br><span class="line">)</span></span><br></pre></td></tr></table></figure>
-在url模式匹配中添加filebrowser的url:     <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> filebrowser.sites <span class="keyword">import</span> site</span><br><span class="line">urlpatterns = patterns[</span><br><span class="line">   url(<span class="string">r'^admin/filebrowser/'</span>, include(site.urls)),</span><br><span class="line">   url(<span class="string">r'^grappelli/'</span>, include(<span class="string">'grappelli.urls'</span>)),</span><br><span class="line">   url(<span class="string">r'^admin/'</span>, include(admin.site.urls)),</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
-一般情况下，默认media文件夹下的uploads为上传文件夹(替换的是uploads文件夹，替换后的文件夹还在media目录下)，如果需要自定义该目录，则需要添加如下配置项：          <figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="setting">FILEBROWSER_DIRECTORY = <span class="value"><span class="string">'yourdirectory/'</span></span></span></span><br></pre></td></tr></table></figure></li>
-<li>测试<br>在项目根目录下运行命令：<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># python manage.py runserver <span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span>:<span class="number">8000</span></span></span><br></pre></td></tr></table></figure>
-访问/admin/filebrowser/browse/，可以管理上传文件（夹）。</li>
+<p>思路就是对$jmeter/lib/ext/ApacheJmeter_core.jar$ 进行修改，每当它将结果输出到控制台时，同时也让它把数据发送到InfluxDB数据库；这样我们就不需要创建单独的Listener来获取对应的性能数据，也省掉了上述metric的计算过程。</p>
+<h3 id="Jar包及Grafana模板配置">Jar包及Grafana模板配置</h3><p><a href="http://www.testautomationguru.com/download/640/" target="_blank" rel="external"><strong>TAG-Influx-Grafana.zip</strong></a></p>
+<ul>
+<li>ApacheJMeter_core.jar: 两个版本对应Jmeter的V2.13和V3.0，选取正确的版本替换lib/ext/里的官方jar包；此外需要对jemter的user.properties进行修改，见一下配置。</li>
+<li>两个Grafana的 dashboard json 分别对应压测的sample数据和summary数据, 从Grafana的Dashboard面板导入。</li>
 </ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">#True to send data to influx db</span><br><span class="line">summariser.influx.out.enabled=true</span><br><span class="line"> </span><br><span class="line"># influxdb server ip</span><br><span class="line">summariser.influx.ip=10.11.12.13</span><br><span class="line"> </span><br><span class="line"># influxdb port to post the data via http</span><br><span class="line">summariser.influx.port=8086</span><br><span class="line"> </span><br><span class="line"># influxdb database</span><br><span class="line">summariser.influx.db=jmeter</span><br><span class="line"> </span><br><span class="line"># name of the project. might be useful when you <span class="operator"><span class="keyword">use</span> same DB <span class="keyword">for</span> multiple projects.</span><br><span class="line"># it <span class="keyword">is</span> <span class="keyword">stored</span> <span class="keyword">as</span> tag <span class="keyword">for</span> faster <span class="keyword">query</span></span><br><span class="line">summariser.influx.<span class="keyword">project</span>=taguru</span><br><span class="line"> </span><br><span class="line"># <span class="keyword">name</span> <span class="keyword">of</span> the <span class="keyword">test</span> suite. might be useful <span class="keyword">when</span> you run the same <span class="keyword">test</span> <span class="keyword">for</span> different conditions.</span><br><span class="line"># it <span class="keyword">is</span> <span class="keyword">stored</span> <span class="keyword">as</span> tag <span class="keyword">for</span> faster <span class="keyword">query</span></span><br><span class="line">summariser.influx.<span class="keyword">project</span>.suite=taguru-<span class="number">100</span>-<span class="keyword">users</span></span><br><span class="line"> </span><br><span class="line"># timeouts</span><br><span class="line">summariser.influx.<span class="keyword">connection</span>.<span class="keyword">timeout</span>=<span class="number">5000</span></span><br><span class="line">summariser.influx.socket.<span class="keyword">timeout</span>=<span class="number">5000</span></span></span><br></pre></td></tr></table></figure>
+<p>注意：</p>
+<ul>
+<li>使用了修改后的jar包和以上配置，不需要再添加backend listener；</li>
+<li>默认不给InfluxDB设置用户名和密码；</li>
+<li>修改只在Jmeter的Non-GUI模式下可用。<br><br><br>使用以上jar包和配置运行压测脚本后，可以在InfluxDB看到一下三个measurements:</li>
+<li>delta</li>
+<li>total</li>
+<li>samples<br><img src="https://raw.githubusercontent.com/cshuo/bpic/master/jmeter_measurements.png" alt=""></li>
+</ul>
+<h3 id="Grafana_配置">Grafana 配置</h3><ul>
+<li>配置Data source指向安装的InfluxDB数据库;</li>
+<li>从Grafana的dashboard导入上面下载的配置文件(json格式)；<br>配置正确的话可以看到如下的Dashboard:<br><img src="https://raw.githubusercontent.com/cshuo/bpic/master/grafana.png" alt=""></li>
+</ul>
+<h4 id="参考">参考</h4><p><a href="http://www.testautomationguru.com/jmeter-real-time-results-influxdb-grafana/" target="_blank" rel="external">jmeter-real-time-results-influxdb-grafana</a></p>
 </span>
       
     </div>
@@ -317,7 +329,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/django/" rel="tag">#django</a>
+            <a href="/tags/monitoring-load-testing/" rel="tag">#monitoring,load testing</a>
           
         </div>
       
@@ -326,16 +338,16 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/11/04/restful-note/" rel="next" title="Restful API浅析--设计原则与案例修正">
-                <i class="fa fa-chevron-left"></i> Restful API浅析--设计原则与案例修正
+              <a href="/2016/09/10/live_migration/" rel="next" title="VM 热迁移详解">
+                <i class="fa fa-chevron-left"></i> VM 热迁移详解
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2015/11/17/Bloom-Filter/" rel="prev" title="Bloom Filter">
-                Bloom Filter <i class="fa fa-chevron-right"></i>
+              <a href="/2017/02/20/openstack_amqp/" rel="prev" title="Openstack源码解读先导篇--AMQP">
+                Openstack源码解读先导篇--AMQP <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -363,8 +375,8 @@
         
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2015/11/15/django-filebrowser/"
-           data-title="django1.8 服务器目录管理 -- grappelli + filebrowser" data-url="http://yoursite.com/2015/11/15/django-filebrowser/">
+      <div class="ds-thread" data-thread-key="2016/12/26/jmeter_influxdb/"
+           data-title="使用InfluxDB && Grafana 对Jmeter实时数据持久化及展示" data-url="http://yoursite.com/2016/12/26/jmeter_influxdb/">
       </div>
     
   </div>
@@ -408,21 +420,21 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">7</span>
+              <span class="site-state-item-count">10</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
 
           <div class="site-state-item site-state-categories">
             <a href="/categories">
-              <span class="site-state-item-count">5</span>
+              <span class="site-state-item-count">7</span>
               <span class="site-state-item-name">分类</span>
               </a>
           </div>
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">7</span>
+              <span class="site-state-item-count">9</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>
@@ -511,7 +523,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装要求："><span class="nav-number">1.</span> <span class="nav-text">安装要求：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FileBrowser安装与配置"><span class="nav-number">2.</span> <span class="nav-text">FileBrowser安装与配置</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#主要思路"><span class="nav-number">1.</span> <span class="nav-text">主要思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Jar包及Grafana模板配置"><span class="nav-number">2.</span> <span class="nav-text">Jar包及Grafana模板配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Grafana_配置"><span class="nav-number">3.</span> <span class="nav-text">Grafana 配置</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#参考"><span class="nav-number">3.1.</span> <span class="nav-text">参考</span></a></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator">

@@ -59,7 +59,7 @@
 <meta property="og:image" content="http://yoursite.com/img/rrd_dst.png">
 <meta property="og:image" content="http://yoursite.com/img/rra.png">
 <meta property="og:image" content="http://yoursite.com/img/cpu_user.png">
-<meta property="og:updated_time" content="2015-11-29T03:33:11.000Z">
+<meta property="og:updated_time" content="2017-07-03T14:57:12.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RRD浅析">
 <meta name="twitter:description" content="本文是对开源监控工具Ganglia使用的RRD数据库的一个简单介绍，此外还有一些有关RRDTool的基本操作。">
@@ -303,7 +303,7 @@
 </ul>
 <h3 id="RRD的基本结构">RRD的基本结构</h3><p>因为RRD数据库设计目的是监控，所以它的结构比较简单，创建一个RRD数据库的方式如下：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">rrdtool create target.rrd \     </span><br><span class="line">         --start <span class="number">1023654125</span> \     </span><br><span class="line">         --step <span class="number">300</span> \      </span><br><span class="line">         DS:mem:GAUGE:<span class="number">600</span>:<span class="number">0</span>:<span class="number">671744</span> \     </span><br><span class="line">         RRA:AVERAGE:<span class="number">0.5</span>:<span class="number">12</span>:<span class="number">24</span> \     </span><br><span class="line">         RRA:AVERAGE:<span class="number">0.5</span>:<span class="number">288</span>:<span class="number">31</span></span><br></pre></td></tr></table></figure>
-<p>下面是相关的一些基本概念：    </p>
+<p>​<br>下面是相关的一些基本概念：    </p>
 <ul>
 <li><p>DS: Data Source, 它指的是设备上被监控的变量，一个RRD数据库中可能有多个DS。其声明格式如下：</p>
 <blockquote>
@@ -364,8 +364,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016/05/26/kolla-mitaka-ubuntu-14-04/" rel="prev" title="Deploy Openstack-Mitaka with Kolla in Ubuntu 14.04">
-                Deploy Openstack-Mitaka with Kolla in Ubuntu 14.04 <i class="fa fa-chevron-right"></i>
+              <a href="/2016/05/26/kolla-mitaka-ubuntu-14-04/" rel="prev" title="Deploy Openstack-Mitaka with Kolla on Ubuntu 14.04">
+                Deploy Openstack-Mitaka with Kolla on Ubuntu 14.04 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -438,21 +438,21 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">7</span>
+              <span class="site-state-item-count">10</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
 
           <div class="site-state-item site-state-categories">
             <a href="/categories">
-              <span class="site-state-item-count">5</span>
+              <span class="site-state-item-count">7</span>
               <span class="site-state-item-name">分类</span>
               </a>
           </div>
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">7</span>
+              <span class="site-state-item-count">9</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>

@@ -49,16 +49,19 @@
 
 
 
-<meta name="description" content="在Kolla之前部署过Openstack的都知道这是一件多么繁琐的任务，不过熟悉Chef或Puppet的人可能说完全可以通过这些工具自动化的部署，但是对于没接触过这些工具的人来说，使用它们来编写Openstack自动部署脚本同样令人头疼；正是在这样的大背景下，Kolla横空出世，其宗旨是:&amp;quot;to provide production-ready containers and deploy">
+<meta name="description" content="Openstack遵循这样的设计原则：项目之间通过REST API进行通信；项目内部的各个服务进程是通过消息总线–AMQP来进行交互的。所以在进行Openstack源码解读之前，弄清楚组件内部服务的通信方式十分必要，否则很多代码看起来经常是一头雾水。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Deploy Openstack-Mitaka with Kolla on Ubuntu 14.04">
-<meta property="og:url" content="http://yoursite.com/2016/05/26/kolla-mitaka-ubuntu-14-04/index.html">
+<meta property="og:title" content="Openstack源码解读先导篇--AMQP">
+<meta property="og:url" content="http://yoursite.com/2017/02/20/openstack_amqp/index.html">
 <meta property="og:site_name" content="Blog Cshuo">
-<meta property="og:description" content="在Kolla之前部署过Openstack的都知道这是一件多么繁琐的任务，不过熟悉Chef或Puppet的人可能说完全可以通过这些工具自动化的部署，但是对于没接触过这些工具的人来说，使用它们来编写Openstack自动部署脚本同样令人头疼；正是在这样的大背景下，Kolla横空出世，其宗旨是:&amp;quot;to provide production-ready containers and deploy">
+<meta property="og:description" content="Openstack遵循这样的设计原则：项目之间通过REST API进行通信；项目内部的各个服务进程是通过消息总线–AMQP来进行交互的。所以在进行Openstack源码解读之前，弄清楚组件内部服务的通信方式十分必要，否则很多代码看起来经常是一头雾水。">
+<meta property="og:image" content="https://raw.githubusercontent.com/cshuo/bpic/master/amqp.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/cshuo/bpic/master/rpc_call.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/cshuo/bpic/master/rpc_cast.png">
 <meta property="og:updated_time" content="2017-07-03T14:57:12.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Deploy Openstack-Mitaka with Kolla on Ubuntu 14.04">
-<meta name="twitter:description" content="在Kolla之前部署过Openstack的都知道这是一件多么繁琐的任务，不过熟悉Chef或Puppet的人可能说完全可以通过这些工具自动化的部署，但是对于没接触过这些工具的人来说，使用它们来编写Openstack自动部署脚本同样令人头疼；正是在这样的大背景下，Kolla横空出世，其宗旨是:&amp;quot;to provide production-ready containers and deploy">
+<meta name="twitter:title" content="Openstack源码解读先导篇--AMQP">
+<meta name="twitter:description" content="Openstack遵循这样的设计原则：项目之间通过REST API进行通信；项目内部的各个服务进程是通过消息总线–AMQP来进行交互的。所以在进行Openstack源码解读之前，弄清楚组件内部服务的通信方式十分必要，否则很多代码看起来经常是一头雾水。">
 
 
 
@@ -70,7 +73,7 @@
   };
 </script>
 
-  <title> Deploy Openstack-Mitaka with Kolla on Ubuntu 14.04 | Blog Cshuo </title>
+  <title> Openstack源码解读先导篇--AMQP | Blog Cshuo </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -231,7 +234,7 @@
             
             
               
-                Deploy Openstack-Mitaka with Kolla on Ubuntu 14.04
+                Openstack源码解读先导篇--AMQP
               
             
           </h1>
@@ -240,8 +243,8 @@
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2016-05-26T22:53:00+08:00" content="2016-05-26">
-              2016-05-26
+            <time itemprop="dateCreated" datetime="2017-02-20T00:00:00+08:00" content="2017-02-20">
+              2017-02-20
             </time>
           </span>
 
@@ -266,8 +269,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/05/26/kolla-mitaka-ubuntu-14-04/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/26/kolla-mitaka-ubuntu-14-04/" itemprop="commentsCount"></span>
+                <a href="/2017/02/20/openstack_amqp/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/02/20/openstack_amqp/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -287,79 +290,49 @@
 
       
         <span itemprop="articleBody"><blockquote>
-<p>在Kolla之前部署过Openstack的都知道这是一件多么繁琐的任务，不过熟悉Chef或Puppet的人可能说完全可以通过这些工具自动化的部署，但是对于没接触过这些工具的人来说，使用它们来编写Openstack自动部署脚本同样令人头疼；正是在这样的大背景下，Kolla横空出世，其宗旨是:<code>&quot;to provide production-ready containers and deployment tools for operating OpenStack clouds&quot;</code>.使用Kolla,部署Openstack可以说是傻瓜式的操作体验，下面来介绍基于ubuntu 14.04, 使用Mitaka版本Kolla进行多节点Openstack部署的详细步骤.<br><a id="more"></a></p>
+<p>Openstack遵循这样的设计原则：项目之间通过REST API进行通信；项目内部的各个服务进程是通过消息总线–AMQP来进行交互的。所以在进行Openstack源码解读之前，弄清楚组件内部服务的通信方式十分必要，否则很多代码看起来经常是一头雾水。</p>
 </blockquote>
-<hr>
-<h2 id="背景">背景</h2><p>由于条件限制，我是使用Vagrant(1.7.4)起了两个虚拟机分别作为控制节点和计算节点，点击<a href="https://github.com/cshuo/kolla/blob/stable/mitaka/Vagrantfile" target="_blank" rel="external">这里</a>查看虚拟机的基本配置. 不过在实际多节点部署时，出于高可用的目的，一般会有多个控制节点，并且会把网络服务Neutron和存储服务单独放在不同的节点上，在本文中，这些服务都放在同一个控制节点上.</p>
-<h2 id="基本环境">基本环境</h2><blockquote>
-<p>all: 控制节点和计算节点都需配置;  controller: 控制节点;  compute: 计算节点</p>
-</blockquote>
+<a id="more"></a>
+<p>目前有很多消息总线的开源实现，Openstack采用的是RabbitMQ，基于RabbitMQ，Openstack的oslo_messaging库实现了两种方式来完成项目内部服务进程的通信：</p>
+<ul>
+<li><p>远程过程调用 (RPC, Remote Procedure Call)</p>
+<p>通过远程过程调用，一个服务进程(客户端)可以调用另一个远程服务进程(服务端)中的方法。Openstack采用这种方式主要是考虑到其如下优点：<br>1) 实现了各个服务之间的松耦合；2) 实现了客户端和服务端之间的异步通信(客户端在发出远程调用消息时，并不要求服务端此时已经启动)；3) 随机的对远程调用进行负载均衡 (如果有多个服务端被开启运行，客户端发出的远程调用被透明的分配到第一个可用的服务端)。</p>
+</li>
+<li><p>事件通知</p>
+<p>某个服务进程可以把消息发布到消息总线上，其它的服务进程如果对该消息感兴趣，就可以从总线中拿到这个消息并做进一步的处理，处理的结果不会返回给消息发布者。这种通信方式，不仅可以在一个组件内部进行通信，也可以在不同组件之间发送通知；比如Ceilometer就是通过该方式获取其他项目发布的事件通知，从而实现计量和监控。</p>
+</li>
+</ul>
+<h2 id="AMQP详解">AMQP详解</h2><p>AMQP是一个异步消息传递所使用的应用层协议规范，主要包括了消息的导向、队列、路由、可靠性和安全性。下面以RabbitMQ为例对AMQP进行介绍，其架构如下图所示：</p>
+<p><img src="https://raw.githubusercontent.com/cshuo/bpic/master/amqp.png" alt=""></p>
+<p>RabbitMQ模型中主要有以下主要概念：</p>
 <ol>
-<li>升级内核(all)<br>一般来讲ubuntu 14.04 默认的内核3.13是支持docker的各项特性的，但是一些老版本的内核可能跟Docker使用的AUFS和OverlayFS存在一些兼容问题，以防万一，升级内核到最新版本肯定没错.<br><code>$ sudo apt-get -y install linux-image-generic-lts-wily</code><br>安装完成之后，需要重启机器才能生效.</li>
-<li><p>修改hosts(all)<br>确保控制节点可以解析计算节点hostname,hosts文件只保留127.0.0.1以及ip的解析, controller的hosts实例如下：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>   localhost</span><br><span class="line"><span class="number">20.0</span><span class="number">.2</span><span class="number">.11</span>   controller</span><br><span class="line"><span class="number">20.0</span><span class="number">.3</span><span class="number">.11</span>   compute</span><br></pre></td></tr></table></figure>
+<li><p>Publisher: 消息发送者，主要是将消息发送给Exchange，并且指明消息的Rounting Key，以实现Exchange对消息的路由。</p>
 </li>
-<li><p>安装Docker(all)<br>Kolla是将Openstack的所有服务组件都放在容器中，Docker当然是需要安装的。使用一下脚本安装最新的Docker:<br><code>$ sudo curl -sSL https://get.docker.io | bash</code><br>安装完成后,docker只能在root用户下使用，使用一下命令将其他用户添加到docker组中:<br><code>$ sudo usermode -aG docker $USERNAME</code><br>接着需要对docker-engine服务进行相关配置，<br><code>$ sudo mount --make-shared /run</code><br>重启docker,<br><code>$ sudo service docker restart</code><br>最后更新Docker的python库，<br><code>$ sudo pip install -U docker-py</code>    </p>
+<li><p>Consumer: 消息消费者，从消息队列中拿取消息。</p>
 </li>
-<li>安装NTP(all)<br>Openstack中很多组件都有消息的传递，为保证系统的正确性，需要进行时钟的同步，推荐使用ntp进行时钟同步:<br><code>$ sudo apt-get install ntp</code></li>
-<li>安装Ansible(controller)<br>推荐安装1.9.4版本,使用pip进行安装:<br><code>$ sudo pip install -U ansible==1.9.4</code></li>
-<li>安装ssh密钥<br>Kolla用Ansible进行安装配置的部分操作需要root权限，为操作方便，我们选择配置控制节点可以用root用户ssh到计算节点.     <ul>
-<li>计算节点允许root ssh(compute)<br><code>$ vi /etc/ssh/sshd_config</code><br>“PermitRootLogin Without-password” -&gt; “PermitRootLogin yes”<br><code>$ sudo service ssh restart</code></li>
-<li>生成控制节点root用户密钥(controller)<br><code>$ sudo su</code><br><code># ssh-keygen</code>    </li>
-<li>拷贝密钥至所有节点(all)<br><code>$ sudo echo &quot;$KEYS&quot; &gt;&gt; /root/.ssh/authorized_keys</code></li>
-<li>验证无密码登陆<br><code># ssh root@compute</code><br><code># ssh root@controller</code>    </li>
-</ul>
+<li><p>Exchagne: 消息交换机，从发布方接收消息，并转发到相应的队列中去。</p>
 </li>
-<li>安装openstack客户端<br>在运行Openstack CLI的机器上安装Openstack的客户端，这里即控制节点.     <ul>
-<li>安装依赖<br><code>$ sudo apt-get install -y python-dev libffi-dev libssl-dev gcc</code></li>
-<li>安装客户端<br><code>$ pip install -U python-openstackclient python-neutronclient</code></li>
-</ul>
+<li><p>Queue：消息缓冲区，接受从交换机转发而来的消息，以便消费者使用。</p>
 </li>
-<li>安装Kolla(controller)<br>这里使用的Kolla版本是基于Kolla官方Repo的Stable/Mitaka分支, 但是当前该版本是不提供Ceilometer服务，我们使用目前仍在Review中的<a href="https://review.openstack.org/#/c/300574/" target="_blank" rel="external">Ceilometer Patch</a>进行补充，从而开启Ceilometer服务.<ul>
-<li>克隆Kolla项目:<br><code>$ git clone -b stable/mitaka https://github.com/cshuo/kolla.git</code>  </li>
-<li>安装Kolla工具及相关依赖:<br><code>$ sudo pip install kolla/</code></li>
-<li>Kolla的配置文件在etc/kolla中, 将之拷贝到/etc/下:<br><code>$ cd kolla</code><br><code>$ sudo cp -r etc/kolla /etc/</code></li>
-</ul>
+<li><p>Routing: 从发布者发送到交换机的消息需要携带一个Rounting Key, 对应的每个与交换机绑定的消息队列都有一个Binding Key, 通过二者的匹配，实现消息的路由。</p>
 </li>
 </ol>
-<h2 id="配置本地Docker仓库">配置本地Docker仓库</h2><p>如果选用All-In-One模式的Openstack, 那么可以选择不安装本地仓库, 但对于多节点Openstack, 本地仓库是必要的.</p>
+<p>AMQP模型里定义了多种类型的交换机，比较重要的有三种，实现了不同的消息路由方法：</p>
+<ul>
+<li>直接式：该类交换机需要精确匹配消息的Routing Key与交换机的Binding Key, 匹配成功则发送到对应绑定的消息队里中。</li>
+<li>主题式：一种消息发布-订阅模式，该类型的交换机可能会将消息路由到不同的消息队列中，Routing Key和Binding Key的匹配方式比直接式更灵活，支持通配符，”#”匹配零个或多个单词，“*”匹配单个单词，单词之间是由“.”来分割的。比如“*.hades.#”可以匹配”tom.hades”和“tom.hades.jack”，但是不能匹配”hades.jack”。</li>
+<li>广播式：忽略Routing Key和Bingding Key，消息会被发送到所有绑定在交换机上的消息队列中去。</li>
+</ul>
+<h2 id="AMQP实现RPC">AMQP实现RPC</h2><p>Openstack各个组件内服务进程基于AMQP实现通信，实际上真正实现消息调用流程的是RPC机制。Openstack每个组件内的服务可能是RPC模型中的Invoker，也可能是Worker。Invoker是RPC模型中负责发送消息的组件，消息发送方式有两种：1) rpc.call和rpc.cast, 通过call方式调用，远程方法会被同步执行，Invoker会被阻塞直到结果返回，而cast方式，远程方法会被异步执行，结果不需返回。Worker负责从消息队列中取得消息，进行处理，根据情况再发送结果给Invoker。下面对rpc.call和rpc.cast的AMQP模型进行分别介绍。</p>
+<h3 id="RPC_Call">RPC Call</h3><p>下图展示了rpc.call过程中消息在AMQP模型中的流向：</p>
 <ol>
-<li>启动Registry, 推荐使用2.3+版本(controller)<br><code>$ docker run -d -p 4000:5000 --restart=always --name registry registry:2</code></li>
-<li><p>修改docker daemon默认参数(all)<br><code>$ sudo  vi /etc/default/docker</code><br>添加以下配置:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DOCKER_OPTS=<span class="string">"--insecure-registry <span class="variable">$CONTROLLER_IP</span>:4000"</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>重启docker<br><code>$ sudo service docker restart</code></p>
-</li>
+<li>rpc.call操作被调用，产生一个Topic类型的Publisher，负责将消息发送给队列系统，其生命周期是消息的整个传递过程；与此同时，在发送消息之前，产生一个Direct类型的Consumer，用来等待响应消息。</li>
+<li>根据消息的Routing Key(比如”topic.host”)，消息被路由到相应的消息队列中，然后，Topic类型的Consumer获取消息，交给对应的Worker进行进一步的任务处理。</li>
+<li>当任务处理完毕后，一个Direct类型的Publisher被实例化，负责将处理结果发送到队列系统。</li>
+<li>当消息被Exchage根据Routing Key(比如”msg_id”)路由到对应的消息队列中去，第一步产生的Direct类型的Consumer获取消息，返回给Invoker。</li>
 </ol>
-<h2 id="修改Kolla的配置">修改Kolla的配置</h2><p>Kolla的ansible inventory配置文件指定了那些服务运行在那些主机上，实际部署时需要根据自己的集群情况进行修改，这里我们只有两台虚拟机，一台作为控制节点，运行绝大部分服务，一台作为计算节点，运行计算服务, 部分配置如下:<br><figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[control]</span><br><span class="line"><span class="comment"># These hostname must be resolvable from your deployment host</span></span><br><span class="line">controller</span><br><span class="line"><span class="comment"># The network nodes are where your l3-agent and loadbalancers will run</span></span><br><span class="line"><span class="comment"># This can be the same as a host in the control group</span></span><br><span class="line">[network]</span><br><span class="line">controller</span><br><span class="line">[compute]</span><br><span class="line">compute</span><br><span class="line">[storage]</span><br><span class="line">controller</span><br><span class="line"><span class="keyword">...</span></span><br></pre></td></tr></table></figure></p>
-<h2 id="编译openstack的docker镜像">编译openstack的docker镜像</h2><p>前面提到Kolla是把Openstack的所有服务都放在容器里，所以在部署前，我们需要编译镜像，默认的编译命令很简单:<br><code># kolla-build</code><br>默认情况下, Kolla是使用CentOS作为基础镜像, 不过本人更习惯使用Ubuntu; 此外，镜像编译完成之后，我们还需要将其推到本地仓库中，所以最后的编译命令是:<br><code># kolla-build --base ubuntu --type source --registry $CONTROLLER_IP:4000 --push</code>    </p>
-<h2 id="部署Kolla">部署Kolla</h2><ol>
-<li><p>修改环境变量<br>Kolla的所有环境变量都存放在/etc/kolla/下的globals.yml和password.yml中, 首先运行命令:<br><code># kolla-genpwd</code><br>该命令会随机生成密码填充到password.yml中. 然后修改globals.yml,有关这些变量的含义配置文件中详细说明.     </p>
-<figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="label">kolla_base_distro:</span> <span class="string">"ubuntu"</span></span><br><span class="line"><span class="label">kolla_install_type:</span> <span class="string">"source"</span></span><br><span class="line"><span class="label">kolla_internal_vip_address:</span> <span class="string">"$VIP_ADDR"</span></span><br><span class="line"><span class="label">network_interface:</span> <span class="string">"eth0"</span></span><br><span class="line"><span class="label">neutron_external_interface:</span> <span class="string">"eth1"</span></span><br><span class="line"><span class="label">docker_registry:</span> <span class="string">"$CONTROLLER_IP:4000"</span></span><br><span class="line">...</span><br><span class="line"><span class="label">enable_ceilometer:</span> <span class="string">"yes"</span></span><br><span class="line"><span class="label">enable_mongodb:</span> <span class="string">"yes"</span></span><br><span class="line"><span class="label">enable_ceph:</span> <span class="string">"yes"</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>检查部署环境<br>运行一下命令检查目的主机的配置时候准备完毕:<br><code># kolla-ansible prechecks -i &lt;path/to/multinode/inventory/file&gt;</code>    </p>
-</li>
-<li><p>开始部署<br><code># kolla-ansible deploy -i &lt;path/to/multinode/inventory/file&gt;</code>     </p>
-<blockquote>
-<p>如果你也是使用虚拟机进行部署的话,那么应该是不支持虚拟机的硬件加速的，需要把libvirty的虚拟类型改为qemu, 修改计算节点/etc/kolla/nova-compute/nova.conf, 在[libvirt]模块添加 virt_type=qemu,</p>
-<figure class="highlight prolog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[<span class="atom">libvirt</span>]</span><br><span class="line">...</span><br><span class="line"><span class="atom">virt_type</span>=<span class="atom">qemu</span></span><br></pre></td></tr></table></figure>
-</blockquote>
-</li>
-<li><p>一些有用的工具<br>部署完成后，运行以下命令可以生成一个openrc文件(运行openstack CLI所需的环境变量):<br><code># kolla-ansible post-deploy</code><br>openrc文件生成之后，使用以下命令可以帮你做一下openstack的初始化工作，包括上传一个glance镜像以及创建几个虚拟网络:<br><code># source /etc/kolla/admin-openrc.sh</code><br><code># kolla/tools/init-runonce</code></p>
-</li>
-</ol>
-<p>到这里，部署已经全部完成，打开浏览器，输入$VIP_ADDR, 和你的openstack愉快的玩耍吧.</p>
-<h2 id="错误处理">错误处理</h2><ol>
-<li>环境检查错误<br>这种错误一般是因为环境的配置不正确(hostname不能解析, 密钥部署错误等),此时一般会有日志输出，根据log信息进行处理.</li>
-<li>部署错误<br>部署时出现的错误，日志信息是在容器中，通过运行一下命令可以查看log:<br><code>$ docker logs $CONTAINER_NAME</code><br>根据日志进行调试即可.</li>
-</ol>
-<p>由于错误的出现，可能需要多次的部署，而有些错误重新部署是不会进行修正的，所以需要将整个环境进行清理:<br><code>$ tools/cleanup-containers</code><br><code>$ tools/cleanup-host</code></p>
-<h2 id="参考资料">参考资料</h2><ul>
-<li><a href="http://docs.openstack.org/developer/kolla/quickstart.html" target="_blank" rel="external">Kolla部署文档</a></li>
-<li><a href="https://review.openstack.org/#/c/300574/" target="_blank" rel="external">Ceilometer补丁</a></li>
-<li><a href="https://bugs.launchpad.net/kolla/+bug/1581565" target="_blank" rel="external">Kolla Ceilometer Bug1</a></li>
-<li><a href="https://bugs.launchpad.net/kolla/+bug/1582062" target="_blank" rel="external">Kolla Ceilometer Bug2</a></li>
-</ul>
+<p><img src="https://raw.githubusercontent.com/cshuo/bpic/master/rpc_call.png" alt=""></p>
+<h3 id="RPC_Cast">RPC Cast</h3><p>rpc.cast不需要返回结果，所以它实际上就是rpc.call的前两步骤，消息在AMQP模型中的流向如下图所示：<br><img src="https://raw.githubusercontent.com/cshuo/bpic/master/rpc_cast.png" alt=""></p>
 </span>
       
     </div>
@@ -377,16 +350,16 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/11/23/rrd/" rel="next" title="RRD浅析">
-                <i class="fa fa-chevron-left"></i> RRD浅析
+              <a href="/2016/12/26/jmeter_influxdb/" rel="next" title="使用InfluxDB && Grafana 对Jmeter实时数据持久化及展示">
+                <i class="fa fa-chevron-left"></i> 使用InfluxDB && Grafana 对Jmeter实时数据持久化及展示
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016/09/10/live_migration/" rel="prev" title="VM 热迁移详解">
-                VM 热迁移详解 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/02/25/fuzzy_control/" rel="prev" title="Fuzzy Control - 模糊控制">
+                Fuzzy Control - 模糊控制 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -414,8 +387,8 @@
         
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/05/26/kolla-mitaka-ubuntu-14-04/"
-           data-title="Deploy Openstack-Mitaka with Kolla on Ubuntu 14.04" data-url="http://yoursite.com/2016/05/26/kolla-mitaka-ubuntu-14-04/">
+      <div class="ds-thread" data-thread-key="2017/02/20/openstack_amqp/"
+           data-title="Openstack源码解读先导篇--AMQP" data-url="http://yoursite.com/2017/02/20/openstack_amqp/">
       </div>
     
   </div>
@@ -562,7 +535,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基本环境"><span class="nav-number">2.</span> <span class="nav-text">基本环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置本地Docker仓库"><span class="nav-number">3.</span> <span class="nav-text">配置本地Docker仓库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修改Kolla的配置"><span class="nav-number">4.</span> <span class="nav-text">修改Kolla的配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#编译openstack的docker镜像"><span class="nav-number">5.</span> <span class="nav-text">编译openstack的docker镜像</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#部署Kolla"><span class="nav-number">6.</span> <span class="nav-text">部署Kolla</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#错误处理"><span class="nav-number">7.</span> <span class="nav-text">错误处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">8.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#AMQP详解"><span class="nav-number">1.</span> <span class="nav-text">AMQP详解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AMQP实现RPC"><span class="nav-number">2.</span> <span class="nav-text">AMQP实现RPC</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#RPC_Call"><span class="nav-number">2.1.</span> <span class="nav-text">RPC Call</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RPC_Cast"><span class="nav-number">2.2.</span> <span class="nav-text">RPC Cast</span></a></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator">
