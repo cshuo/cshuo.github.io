@@ -49,19 +49,22 @@
 
 
 
-<meta name="description" content="虚拟机热迁移是虚拟化技术中的一个研究热点, 所谓迁移就是讲源主机上的操作系统连同所有应用程序移动到目的主机上, 并且保证系统和应用程序的状态在迁移前后的一致性. 一般各个虚拟化工具都有自己的迁移组件, 如VMware的Vmotion, Xen的XenMotion和Microsoft的Hyper-V. 虚拟机的迁移可以分为两大类: 离线迁移(Offline Migration)和热迁移(Live M">
+<meta name="description" content="虚拟机热迁移是虚拟化技术中的一个研究热点, 所谓迁移就是讲源主机上的操作系统连同所有应用程序移动到目的主机上, 并且保证系统和应用程序的状态在迁移前后的一致性. 一般各个虚拟化工具都有自己的迁移组件, 如VMware的Vmotion, Xen的XenMotion和Microsoft的Hyper-V. 虚拟机的迁移可以分为两大类: 离线迁移(Offline Migration)和热迁移(Live">
+<meta name="keywords" content="vm">
 <meta property="og:type" content="article">
 <meta property="og:title" content="VM 热迁移详解">
 <meta property="og:url" content="http://yoursite.com/2016/09/10/live_migration/index.html">
 <meta property="og:site_name" content="Blog Cshuo">
-<meta property="og:description" content="虚拟机热迁移是虚拟化技术中的一个研究热点, 所谓迁移就是讲源主机上的操作系统连同所有应用程序移动到目的主机上, 并且保证系统和应用程序的状态在迁移前后的一致性. 一般各个虚拟化工具都有自己的迁移组件, 如VMware的Vmotion, Xen的XenMotion和Microsoft的Hyper-V. 虚拟机的迁移可以分为两大类: 离线迁移(Offline Migration)和热迁移(Live M">
+<meta property="og:description" content="虚拟机热迁移是虚拟化技术中的一个研究热点, 所谓迁移就是讲源主机上的操作系统连同所有应用程序移动到目的主机上, 并且保证系统和应用程序的状态在迁移前后的一致性. 一般各个虚拟化工具都有自己的迁移组件, 如VMware的Vmotion, Xen的XenMotion和Microsoft的Hyper-V. 虚拟机的迁移可以分为两大类: 离线迁移(Offline Migration)和热迁移(Live">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://raw.githubusercontent.com/cshuo/bpic/master/live_mrt1.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/cshuo/bpic/master/live_mrt2.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/cshuo/bpic/master/live_mrt3.png">
 <meta property="og:updated_time" content="2017-07-03T14:57:12.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="VM 热迁移详解">
-<meta name="twitter:description" content="虚拟机热迁移是虚拟化技术中的一个研究热点, 所谓迁移就是讲源主机上的操作系统连同所有应用程序移动到目的主机上, 并且保证系统和应用程序的状态在迁移前后的一致性. 一般各个虚拟化工具都有自己的迁移组件, 如VMware的Vmotion, Xen的XenMotion和Microsoft的Hyper-V. 虚拟机的迁移可以分为两大类: 离线迁移(Offline Migration)和热迁移(Live M">
+<meta name="twitter:description" content="虚拟机热迁移是虚拟化技术中的一个研究热点, 所谓迁移就是讲源主机上的操作系统连同所有应用程序移动到目的主机上, 并且保证系统和应用程序的状态在迁移前后的一致性. 一般各个虚拟化工具都有自己的迁移组件, 如VMware的Vmotion, Xen的XenMotion和Microsoft的Hyper-V. 虚拟机的迁移可以分为两大类: 离线迁移(Offline Migration)和热迁移(Live">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/cshuo/bpic/master/live_mrt1.png">
 
 
 
@@ -320,13 +323,13 @@
 <li>问题: 一些内存页更新的速度很快, 每次迭代都被更新, 从而每次都被重新拷贝, 造成不必要的开销.<br>优化: 一种比较朴素的方法是只传输那些在上轮迭代中更新,本轮迭代中没更新的内存页. 这样可以在一定程度上减少每轮迭代中拷贝的内存页数.</li>
 <li>问题: 预拷贝策略一般会持续一定时间, 在这段时间内, 必然会占用网络带宽资源. 可能会对对网络比较敏感的服务造成影响. 另一方面, 如果将内存拷贝的带宽限制到比较低的水平话, 将会导致最终Stop-and-Copy的停机时间(Downtime)比较长.<br>优化: 采用动态迁移带宽限制的方法, 每次迭代中, 统计需要被拷贝的内存页数, 除以上轮迭代持续的时间, 得到一个内存页被更新的速度(Dirtying rate), 然后通过给这个速度增加一个常量来确定下一轮内存页拷贝的带宽限制. 系统管理员可以设置一个内存迁移的带宽上限, 当Dirtying rate大于这个上限或者在一轮迭代中剩余的脏页数小于一个特定值, 此时就可以结束迭代, 进入Stop-and-Copy阶段.</li>
 <li>问题: 延迟拷贝策略中, 目标物理机上的虚拟机在获取处理状态后就被启动, 内存访问会导致缺页错(Page fault), 然后这些页面会被请求从源主机上通过网络发送过来, 这是一个被动请求的过程(Demand Paging). 单纯的使用Demand Paging会导致整个迁移过程比较缓慢, Page fault也会对应用的性能造成一定影响.<br>优化: 在Demand Paging的同时, 从源物理主机主动推送内存页到目标节点(Active pushing). 这些主动推送的内存页不包括由于缺页错而被被动要求传送的页面. 通过这样的方式, 既保证了每个内存页只被拷贝了一次, 也加快了迁移的速度. Active pushing过程中最简单的方式是按序推送或随机推送, 显然这种方式不能很好的反映内存访问模式. 一种可行的方法是根据之前缺页错的地址, 将其附近的内存页进行拷贝(内存访问一般呈现区域密集性), 这样可以提高主动推送的内存页近期被访问的概率, 从而有效减少缺页错.</li>
-<li>问题: 预拷贝和延迟拷贝都存在一个问题, 就是在这两种情况下, 迁移过程中都会拷贝空页(Free page), 延长了迁移时间, 造成了不必要的开销.<br>优化: 使用Ballooning技术, 动态的释放虚拟机的空页到虚拟机管理器(Hypervisor). <a href="http://www.vmware.com/content/dam/digitalmarketing/vmware/en/pdf/techpaper/perf-vsphere-memory_management.pdf" target="_blank" rel="external">Ballooning</a>是动态管理虚拟机内存分配的一种技术, 通常需要在guest kernel上安装一个Balloon驱动. 在一些内存页对虚拟机没用的时候, Balloon驱动可以将其回收, 返还给Hypervisor (气球膨胀); 当内存不够时, 也可以向Hypervisor请求额外的内存页(气球收缩). 通过动态的Ballooning, 空白内存可以有效减少Pre-Copy或Post-Copy过程中需要传递的内存页数.</li>
+<li>问题: 预拷贝和延迟拷贝都存在一个问题, 就是在这两种情况下, 迁移过程中都会拷贝空页(Free page), 延长了迁移时间, 造成了不必要的开销.<br>优化: 使用Ballooning技术, 动态的释放虚拟机的空页到虚拟机管理器(Hypervisor). <a href="http://www.vmware.com/content/dam/digitalmarketing/vmware/en/pdf/techpaper/perf-vsphere-memory_management.pdf" target="_blank" rel="noopener">Ballooning</a>是动态管理虚拟机内存分配的一种技术, 通常需要在guest kernel上安装一个Balloon驱动. 在一些内存页对虚拟机没用的时候, Balloon驱动可以将其回收, 返还给Hypervisor (气球膨胀); 当内存不够时, 也可以向Hypervisor请求额外的内存页(气球收缩). 通过动态的Ballooning, 空白内存可以有效减少Pre-Copy或Post-Copy过程中需要传递的内存页数.</li>
 </ol>
 <h3 id="参考资料">参考资料</h3><ul>
-<li><a href="http://www.ibm.com/developerworks/cn/linux/l-cn-mgrtvm1/" target="_blank" rel="external">虚拟机技术漫谈</a></li>
-<li><a href="http://dl.acm.org/citation.cfm?id=1251223" target="_blank" rel="external">Live Migration of Virtual Machines</a></li>
-<li><a href="http://dl.acm.org/citation.cfm?id=1618528" target="_blank" rel="external">Post-Copy Live Migration of Virtual Machines</a></li>
-<li><a href="http://www.vmware.com/content/dam/digitalmarketing/vmware/en/pdf/techpaper/perf-vsphere-memory_management.pdf" target="_blank" rel="external">Understanding Memory Resource Management in VMware® ESX™ Server</a></li>
+<li><a href="http://www.ibm.com/developerworks/cn/linux/l-cn-mgrtvm1/" target="_blank" rel="noopener">虚拟机技术漫谈</a></li>
+<li><a href="http://dl.acm.org/citation.cfm?id=1251223" target="_blank" rel="noopener">Live Migration of Virtual Machines</a></li>
+<li><a href="http://dl.acm.org/citation.cfm?id=1618528" target="_blank" rel="noopener">Post-Copy Live Migration of Virtual Machines</a></li>
+<li><a href="http://www.vmware.com/content/dam/digitalmarketing/vmware/en/pdf/techpaper/perf-vsphere-memory_management.pdf" target="_blank" rel="noopener">Understanding Memory Resource Management in VMware® ESX™ Server</a></li>
 </ul>
 </span>
       
@@ -551,7 +554,7 @@
         <div class="copyright" align="center">
   
   &copy;  2015 - 
-  <span itemprop="copyrightYear">2017</span>
+  <span itemprop="copyrightYear">2018</span>
   <span class="with-love">
     <i class="icon-next-heart fa fa-heart"></i>
   </span>

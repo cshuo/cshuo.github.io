@@ -50,11 +50,13 @@
 
 
 <meta name="description" content="Openstack遵循这样的设计原则：项目之间通过REST API进行通信；项目内部的各个服务进程是通过消息总线–AMQP来进行交互的。所以在进行Openstack源码解读之前，弄清楚组件内部服务的通信方式十分必要，否则很多代码看起来经常是一头雾水。">
+<meta name="keywords" content="openstack">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Openstack源码解读先导篇--AMQP">
 <meta property="og:url" content="http://yoursite.com/2017/02/20/openstack_amqp/index.html">
 <meta property="og:site_name" content="Blog Cshuo">
 <meta property="og:description" content="Openstack遵循这样的设计原则：项目之间通过REST API进行通信；项目内部的各个服务进程是通过消息总线–AMQP来进行交互的。所以在进行Openstack源码解读之前，弄清楚组件内部服务的通信方式十分必要，否则很多代码看起来经常是一头雾水。">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://raw.githubusercontent.com/cshuo/bpic/master/amqp.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/cshuo/bpic/master/rpc_call.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/cshuo/bpic/master/rpc_cast.png">
@@ -62,6 +64,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Openstack源码解读先导篇--AMQP">
 <meta name="twitter:description" content="Openstack遵循这样的设计原则：项目之间通过REST API进行通信；项目内部的各个服务进程是通过消息总线–AMQP来进行交互的。所以在进行Openstack源码解读之前，弄清楚组件内部服务的通信方式十分必要，否则很多代码看起来经常是一头雾水。">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/cshuo/bpic/master/amqp.png">
 
 
 
@@ -556,7 +559,7 @@
         <div class="copyright" align="center">
   
   &copy;  2015 - 
-  <span itemprop="copyrightYear">2017</span>
+  <span itemprop="copyrightYear">2018</span>
   <span class="with-love">
     <i class="icon-next-heart fa fa-heart"></i>
   </span>

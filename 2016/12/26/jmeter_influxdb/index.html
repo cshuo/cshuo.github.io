@@ -49,19 +49,22 @@
 
 
 
-<meta name="description" content="Jmeter是常用的压测工具，使用Jmeter可以对Web应用进行性能测试，常用的性能指标有相应时间(RT)和吞吐率(TP)；Jmeter性能数据的持久化可以通过添加Backend listener来完成，但是这种方式会在InfluxDB里创建相当多的我并不care的measurements，且我所关心的metric并没有直接创建，所以就有了本文直接修改Jmeter的Apache core lib">
+<meta name="description" content="Jmeter是常用的压测工具，使用Jmeter可以对Web应用进行性能测试，常用的性能指标有相应时间(RT)和吞吐率(TP)；Jmeter性能数据的持久化可以通过添加Backend listener来完成，但是这种方式会在InfluxDB里创建相当多的我并不care的measurements，且我所关心的metric并没有直接创建，所以就有了本文直接修改Jmeter的Apache core li">
+<meta name="keywords" content="monitoring,load testing">
 <meta property="og:type" content="article">
-<meta property="og:title" content="使用InfluxDB && Grafana 对Jmeter实时数据持久化及展示">
+<meta property="og:title" content="使用InfluxDB &amp;&amp; Grafana 对Jmeter实时数据持久化及展示">
 <meta property="og:url" content="http://yoursite.com/2016/12/26/jmeter_influxdb/index.html">
 <meta property="og:site_name" content="Blog Cshuo">
-<meta property="og:description" content="Jmeter是常用的压测工具，使用Jmeter可以对Web应用进行性能测试，常用的性能指标有相应时间(RT)和吞吐率(TP)；Jmeter性能数据的持久化可以通过添加Backend listener来完成，但是这种方式会在InfluxDB里创建相当多的我并不care的measurements，且我所关心的metric并没有直接创建，所以就有了本文直接修改Jmeter的Apache core lib">
+<meta property="og:description" content="Jmeter是常用的压测工具，使用Jmeter可以对Web应用进行性能测试，常用的性能指标有相应时间(RT)和吞吐率(TP)；Jmeter性能数据的持久化可以通过添加Backend listener来完成，但是这种方式会在InfluxDB里创建相当多的我并不care的measurements，且我所关心的metric并没有直接创建，所以就有了本文直接修改Jmeter的Apache core li">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://raw.githubusercontent.com/cshuo/bpic/master/jmeter_run.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/cshuo/bpic/master/jmeter_measurements.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/cshuo/bpic/master/grafana.png">
 <meta property="og:updated_time" content="2017-07-03T14:57:12.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="使用InfluxDB && Grafana 对Jmeter实时数据持久化及展示">
-<meta name="twitter:description" content="Jmeter是常用的压测工具，使用Jmeter可以对Web应用进行性能测试，常用的性能指标有相应时间(RT)和吞吐率(TP)；Jmeter性能数据的持久化可以通过添加Backend listener来完成，但是这种方式会在InfluxDB里创建相当多的我并不care的measurements，且我所关心的metric并没有直接创建，所以就有了本文直接修改Jmeter的Apache core lib">
+<meta name="twitter:title" content="使用InfluxDB &amp;&amp; Grafana 对Jmeter实时数据持久化及展示">
+<meta name="twitter:description" content="Jmeter是常用的压测工具，使用Jmeter可以对Web应用进行性能测试，常用的性能指标有相应时间(RT)和吞吐率(TP)；Jmeter性能数据的持久化可以通过添加Backend listener来完成，但是这种方式会在InfluxDB里创建相当多的我并不care的measurements，且我所关心的metric并没有直接创建，所以就有了本文直接修改Jmeter的Apache core li">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/cshuo/bpic/master/jmeter_run.png">
 
 
 
@@ -301,12 +304,12 @@
 <li>Failed requests</li>
 </ul>
 <p>思路就是对$jmeter/lib/ext/ApacheJmeter_core.jar$ 进行修改，每当它将结果输出到控制台时，同时也让它把数据发送到InfluxDB数据库；这样我们就不需要创建单独的Listener来获取对应的性能数据，也省掉了上述metric的计算过程。</p>
-<h3 id="Jar包及Grafana模板配置">Jar包及Grafana模板配置</h3><p><a href="http://www.testautomationguru.com/download/640/" target="_blank" rel="external"><strong>TAG-Influx-Grafana.zip</strong></a></p>
+<h3 id="Jar包及Grafana模板配置">Jar包及Grafana模板配置</h3><p><a href="http://www.testautomationguru.com/download/640/" target="_blank" rel="noopener"><strong>TAG-Influx-Grafana.zip</strong></a></p>
 <ul>
 <li>ApacheJMeter_core.jar: 两个版本对应Jmeter的V2.13和V3.0，选取正确的版本替换lib/ext/里的官方jar包；此外需要对jemter的user.properties进行修改，见一下配置。</li>
 <li>两个Grafana的 dashboard json 分别对应压测的sample数据和summary数据, 从Grafana的Dashboard面板导入。</li>
 </ul>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">#True to send data to influx db</span><br><span class="line">summariser.influx.out.enabled=true</span><br><span class="line"> </span><br><span class="line"># influxdb server ip</span><br><span class="line">summariser.influx.ip=10.11.12.13</span><br><span class="line"> </span><br><span class="line"># influxdb port to post the data via http</span><br><span class="line">summariser.influx.port=8086</span><br><span class="line"> </span><br><span class="line"># influxdb database</span><br><span class="line">summariser.influx.db=jmeter</span><br><span class="line"> </span><br><span class="line"># name of the project. might be useful when you <span class="operator"><span class="keyword">use</span> same DB <span class="keyword">for</span> multiple projects.</span><br><span class="line"># it <span class="keyword">is</span> <span class="keyword">stored</span> <span class="keyword">as</span> tag <span class="keyword">for</span> faster <span class="keyword">query</span></span><br><span class="line">summariser.influx.<span class="keyword">project</span>=taguru</span><br><span class="line"> </span><br><span class="line"># <span class="keyword">name</span> <span class="keyword">of</span> the <span class="keyword">test</span> suite. might be useful <span class="keyword">when</span> you run the same <span class="keyword">test</span> <span class="keyword">for</span> different conditions.</span><br><span class="line"># it <span class="keyword">is</span> <span class="keyword">stored</span> <span class="keyword">as</span> tag <span class="keyword">for</span> faster <span class="keyword">query</span></span><br><span class="line">summariser.influx.<span class="keyword">project</span>.suite=taguru-<span class="number">100</span>-<span class="keyword">users</span></span><br><span class="line"> </span><br><span class="line"># timeouts</span><br><span class="line">summariser.influx.<span class="keyword">connection</span>.<span class="keyword">timeout</span>=<span class="number">5000</span></span><br><span class="line">summariser.influx.socket.<span class="keyword">timeout</span>=<span class="number">5000</span></span></span><br></pre></td></tr></table></figure>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#True to send data to influx db</span></span><br><span class="line">summariser.influx.out.<span class="attribute">enabled</span>=<span class="literal">true</span></span><br><span class="line"> </span><br><span class="line"><span class="comment"># influxdb server ip</span></span><br><span class="line">summariser.influx.<span class="attribute">ip</span>=10.11.12.13</span><br><span class="line"> </span><br><span class="line"><span class="comment"># influxdb port to post the data via http</span></span><br><span class="line">summariser.influx.<span class="attribute">port</span>=8086</span><br><span class="line"> </span><br><span class="line"><span class="comment"># influxdb database</span></span><br><span class="line">summariser.influx.<span class="attribute">db</span>=jmeter</span><br><span class="line"> </span><br><span class="line"><span class="comment"># name of the project. might be useful when you use same DB for multiple projects.</span></span><br><span class="line"><span class="comment"># it is stored as tag for faster query</span></span><br><span class="line">summariser.influx.<span class="attribute">project</span>=taguru</span><br><span class="line"> </span><br><span class="line"><span class="comment"># name of the test suite. might be useful when you run the same test for different conditions.</span></span><br><span class="line"><span class="comment"># it is stored as tag for faster query</span></span><br><span class="line">summariser.influx.project.<span class="attribute">suite</span>=taguru-100-users</span><br><span class="line"> </span><br><span class="line"><span class="comment"># timeouts</span></span><br><span class="line">summariser.influx.connection.<span class="attribute">timeout</span>=5000</span><br><span class="line">summariser.influx.socket.<span class="attribute">timeout</span>=5000</span><br></pre></td></tr></table></figure>
 <p>注意：</p>
 <ul>
 <li>使用了修改后的jar包和以上配置，不需要再添加backend listener；</li>
@@ -320,7 +323,7 @@
 <li>配置Data source指向安装的InfluxDB数据库;</li>
 <li>从Grafana的dashboard导入上面下载的配置文件(json格式)；<br>配置正确的话可以看到如下的Dashboard:<br><img src="https://raw.githubusercontent.com/cshuo/bpic/master/grafana.png" alt=""></li>
 </ul>
-<h4 id="参考">参考</h4><p><a href="http://www.testautomationguru.com/jmeter-real-time-results-influxdb-grafana/" target="_blank" rel="external">jmeter-real-time-results-influxdb-grafana</a></p>
+<h4 id="参考">参考</h4><p><a href="http://www.testautomationguru.com/jmeter-real-time-results-influxdb-grafana/" target="_blank" rel="noopener">jmeter-real-time-results-influxdb-grafana</a></p>
 </span>
       
     </div>
@@ -544,7 +547,7 @@
         <div class="copyright" align="center">
   
   &copy;  2015 - 
-  <span itemprop="copyrightYear">2017</span>
+  <span itemprop="copyrightYear">2018</span>
   <span class="with-love">
     <i class="icon-next-heart fa fa-heart"></i>
   </span>

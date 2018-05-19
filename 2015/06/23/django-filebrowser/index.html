@@ -49,28 +49,18 @@
 
 
 
-<meta name="description" content="FileBrowser是对Django 管理员界面的一个扩展，目的是：
-
-浏览服务器上的目录，包括上传、删除、编辑和重命名文件。
-使用FileBrowseField将图像/文档添加到django的models或database中。
-使用TinyMCE选择图像或文档。">
+<meta name="description" content="FileBrowser是对Django 管理员界面的一个扩展，目的是：  浏览服务器上的目录，包括上传、删除、编辑和重命名文件。 使用FileBrowseField将图像/文档添加到django的models或database中。 使用TinyMCE选择图像或文档。">
+<meta name="keywords" content="django">
 <meta property="og:type" content="article">
 <meta property="og:title" content="django1.8 服务器目录管理 -- grappelli + filebrowser">
 <meta property="og:url" content="http://yoursite.com/2015/06/23/django-filebrowser/index.html">
 <meta property="og:site_name" content="Blog Cshuo">
-<meta property="og:description" content="FileBrowser是对Django 管理员界面的一个扩展，目的是：
-
-浏览服务器上的目录，包括上传、删除、编辑和重命名文件。
-使用FileBrowseField将图像/文档添加到django的models或database中。
-使用TinyMCE选择图像或文档。">
+<meta property="og:description" content="FileBrowser是对Django 管理员界面的一个扩展，目的是：  浏览服务器上的目录，包括上传、删除、编辑和重命名文件。 使用FileBrowseField将图像/文档添加到django的models或database中。 使用TinyMCE选择图像或文档。">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2017-07-03T14:57:12.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="django1.8 服务器目录管理 -- grappelli + filebrowser">
-<meta name="twitter:description" content="FileBrowser是对Django 管理员界面的一个扩展，目的是：
-
-浏览服务器上的目录，包括上传、删除、编辑和重命名文件。
-使用FileBrowseField将图像/文档添加到django的models或database中。
-使用TinyMCE选择图像或文档。">
+<meta name="twitter:description" content="FileBrowser是对Django 管理员界面的一个扩展，目的是：  浏览服务器上的目录，包括上传、删除、编辑和重命名文件。 使用FileBrowseField将图像/文档添加到django的models或database中。 使用TinyMCE选择图像或文档。">
 
 
 
@@ -291,22 +281,22 @@
 </ul>
 <a id="more"></a>
 <h3 id="安装要求：">安装要求：</h3><ul>
-<li><a href="http://www.djangoproject.com" target="_blank" rel="external">Django1.8</a></li>
+<li><a href="http://www.djangoproject.com" target="_blank" rel="noopener">Django1.8</a></li>
 <li>Grappelli<blockquote>
 <p>pip install django-grappelli</p>
 </blockquote>
 </li>
 <li>Pillow<blockquote>
-<p>Pillow是<a href="http://www.oschina.net/p/pil" target="_blank" rel="external">PIL</a>的替代版本，，如：改变图像大小，旋转图像，图像格式转换，色场空间转换，图像增强，直方图处理，插值和滤波等等。<br>首先安装一些图像处理包：<br>apt-get install libjpeg-dev<br>apt-get install libfreetype6-dev<br>apt-get install zlib1g-dev<br>apt-get install libpng12-dev<br>然后安装Pillow<br>#pip install pillow</p>
+<p>Pillow是<a href="http://www.oschina.net/p/pil" target="_blank" rel="noopener">PIL</a>的替代版本，，如：改变图像大小，旋转图像，图像格式转换，色场空间转换，图像增强，直方图处理，插值和滤波等等。<br>首先安装一些图像处理包：<br>apt-get install libjpeg-dev<br>apt-get install libfreetype6-dev<br>apt-get install zlib1g-dev<br>apt-get install libpng12-dev<br>然后安装Pillow<br>#pip install pillow</p>
 </blockquote>
 </li>
 </ul>
 <h3 id="FileBrowser安装与配置">FileBrowser安装与配置</h3><ul>
-<li>安装命令   <figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># pip install django-filebrowser</span></span><br></pre></td></tr></table></figure></li>
-<li>相关配置<br>在Django项目setttings.py中INSTALLED_APPS模块添加相关应用(在django.contrib.admin之前添加):    <figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">INSTALLED_APPS = <span class="list">(</span><br><span class="line"><span class="quoted">'grappelli</span>',</span><br><span class="line"><span class="quoted">'filebrowser</span>',</span><br><span class="line"><span class="quoted">'django</span>.contrib.admin',</span><br><span class="line">)</span></span><br></pre></td></tr></table></figure>
-在url模式匹配中添加filebrowser的url:     <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> filebrowser.sites <span class="keyword">import</span> site</span><br><span class="line">urlpatterns = patterns[</span><br><span class="line">   url(<span class="string">r'^admin/filebrowser/'</span>, include(site.urls)),</span><br><span class="line">   url(<span class="string">r'^grappelli/'</span>, include(<span class="string">'grappelli.urls'</span>)),</span><br><span class="line">   url(<span class="string">r'^admin/'</span>, include(admin.site.urls)),</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
-一般情况下，默认media文件夹下的uploads为上传文件夹(替换的是uploads文件夹，替换后的文件夹还在media目录下)，如果需要自定义该目录，则需要添加如下配置项：          <figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="setting">FILEBROWSER_DIRECTORY = <span class="value"><span class="string">'yourdirectory/'</span></span></span></span><br></pre></td></tr></table></figure></li>
-<li>测试<br>在项目根目录下运行命令：<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># python manage.py runserver <span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span>:<span class="number">8000</span></span></span><br></pre></td></tr></table></figure>
+<li>安装命令   <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> pip install django-filebrowser</span></span><br></pre></td></tr></table></figure></li>
+<li>相关配置<br>在Django项目setttings.py中INSTALLED_APPS模块添加相关应用(在django.contrib.admin之前添加):    <figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">INSTALLED_APPS = (</span><br><span class="line">'grappelli',</span><br><span class="line">'filebrowser',</span><br><span class="line">'django.contrib.admin',</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+在url模式匹配中添加filebrowser的url:     <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> filebrowser.sites <span class="keyword">import</span> site</span><br><span class="line">urlpatterns = patterns[</span><br><span class="line">   url(<span class="string">r'^admin/filebrowser/'</span>, include(site.urls)),</span><br><span class="line">   url(<span class="string">r'^grappelli/'</span>, include(<span class="string">'grappelli.urls'</span>)),</span><br><span class="line">   url(<span class="string">r'^admin/'</span>, include(admin.site.urls)),</span><br><span class="line">]   </span><br></pre></td></tr></table></figure>
+一般情况下，默认media文件夹下的uploads为上传文件夹(替换的是uploads文件夹，替换后的文件夹还在media目录下)，如果需要自定义该目录，则需要添加如下配置项：          <figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">FILEBROWSER_DIRECTORY</span> = <span class="string">'yourdirectory/'</span>        </span><br></pre></td></tr></table></figure></li>
+<li>测试<br>在项目根目录下运行命令：<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># <span class="selector-tag">python</span> <span class="selector-tag">manage</span><span class="selector-class">.py</span> <span class="selector-tag">runserver</span> 0<span class="selector-class">.0</span><span class="selector-class">.0</span><span class="selector-class">.0</span><span class="selector-pseudo">:8000</span>           </span><br></pre></td></tr></table></figure>
 访问/admin/filebrowser/browse/，可以管理上传文件（夹）。</li>
 </ul>
 </span>
@@ -532,7 +522,7 @@
         <div class="copyright" align="center">
   
   &copy;  2015 - 
-  <span itemprop="copyrightYear">2017</span>
+  <span itemprop="copyrightYear">2018</span>
   <span class="with-love">
     <i class="icon-next-heart fa fa-heart"></i>
   </span>
